@@ -203,12 +203,6 @@
     </div>
   </header>
 
-    </div>
-  </header>
-
-    </div>
-  </header>
-
   <!-- ========================================== -->
   <!-- 3. HERO SECTION COM MEGA BUSCADOR UNIFICADO-->
   <!-- ========================================== -->
@@ -246,7 +240,7 @@
             <i data-lucide="compass" class="w-4 h-4 text-brand-600"></i>
             Lançamentos
           </button>
-          <button onclick="setSearchTab('premium')" id="tab-premium" class="px-4 py-2.5 rounded-xl font-bold text-xs bg-slate-900 text-gold-400 hover:bg-black transition flex items-center gap-2 border border-gold-500/40 shadow-sm">
+          <button onclick="setSearchTab('premium')" id="tab-premium" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-gold-400 hover:bg-black transition flex items-center gap-2 border border-gold-500/40 shadow-sm">
             <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i>
             Mediterrâneo Premium
           </button>
@@ -1494,15 +1488,15 @@
         if (!el) return;
         if (t === tab) {
           if (t === 'premium') {
-            el.className = "ml-auto px-4 py-2 rounded-xl font-bold text-xs bg-slate-900 text-gold-400 ring-2 ring-gold-500 transition flex items-center gap-2 shadow-sm";
+            el.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-gold-400 ring-2 ring-gold-500 transition flex items-center gap-2 shadow-sm";
           } else {
             el.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-brand-900 text-white transition flex items-center gap-2 shadow-sm";
           }
         } else {
           if (t === 'premium') {
-            el.className = "ml-auto px-4 py-2 rounded-xl font-bold text-xs bg-slate-900 text-gold-400 hover:bg-black transition flex items-center gap-2 border border-gold-500/40";
+            el.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-gold-400 hover:bg-black transition flex items-center gap-2 border border-gold-500/40 shadow-sm";
           } else {
-            el.className = "px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-100 transition flex items-center gap-2";
+            el.className = "px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-100 hover:text-brand-900 transition flex items-center gap-2";
           }
         }
       });
