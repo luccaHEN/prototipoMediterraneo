@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mediterrâneo Negócios Imobiliários | Protótipo Unificado</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Dados Reais dos Imóveis (Sincronizados da Mediterrâneo / Kurole KSI) -->
+  <script src="imoveis.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              600: '#0284c7',
+              800: '#075985',
+              900: '#0c2340', // Azul Mediterrâneo Profundo
+              950: '#071628',
+            },
+            gold: {
+              400: '#e5c07b',
+              500: '#d4af37',
+              600: '#b89327',
+              700: '#91711a',
+            },
+            prime: {
+              dark: '#090e17',
+              card: '#111827',
+              border: '#1f293d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar & smooth transitions */
+    html { scroll-behavior: smooth; }
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-600 selection:text-white">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP BAR UTILITÁRIA                     -->
+  <!-- ========================================== -->
+  <div class="bg-brand-950 text-slate-300 text-xs py-2 px-4 border-b border-brand-900/60">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <!-- Cidades & CRECI -->
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-1.5 font-medium text-slate-200">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-600"></i>
+          Unidades:
+          <select class="bg-brand-900/80 text-white rounded px-2 py-0.5 border border-brand-800 text-xs focus:outline-none cursor-pointer">
+            <option selected>Jundiaí e Região (Matriz)</option>
+            <option>Campinas e RMC</option>
+          </select>
+        </span>
+        <span class="hidden md:inline-block text-slate-500">|</span>
+        <span class="hidden md:inline-block text-slate-400">CRECI 22189-J • +40 Anos de Tradição</span>
+      </div>
+
+      <!-- Links Diretos & WhatsApp -->
+      <div class="flex items-center gap-4 ml-auto">
+        <button onclick="openModal('modal-corretor')" class="flex items-center gap-1.5 text-gold-400 hover:text-gold-300 font-semibold transition">
+          <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+          Seja um Corretor Parceiro
+        </button>
+        <span class="text-slate-500">|</span>
+        <a href="https://www.mediterraneoimoveis.com.br/ksi/clientes/acesso/login/" target="_blank" class="flex items-center gap-1 hover:text-white transition">
+          <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          Área do Cliente
+        </a>
+        <span class="text-slate-500">|</span>
+        <a href="https://wa.me/5511989615940" target="_blank" class="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-medium transition">
+          <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+          (11) 98961-5940
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. NAVBAR PRINCIPAL                       -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-40 glassmorphism border-b border-slate-200/80 shadow-sm transition-all">
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 items-center gap-4">
+      
+      <!-- COLUNA 1 (1fr): LOGO ALINHADO À ESQUERDA -->
+      <div class="flex items-center justify-start min-w-0">
+        <a href="index.html" class="flex items-center gap-3 group py-1">
+          <img src="LOGO_MEDITERRANEO.png" alt="Mediterrâneo Negócios Imobiliários" class="h-14 sm:h-16 w-auto object-contain transition duration-300 group-hover:scale-105">
+        </a>
+      </div>
+
+      <!-- COLUNA 2 (auto): MENU DE NAVEGAÇÃO RIGOROSAMENTE CENTRALIZADO NO EIXO DO H1 -->
+      <nav class="hidden lg:flex items-center justify-center gap-6 xl:gap-8 text-sm font-semibold text-slate-700 whitespace-nowrap">
+        
+        <!-- DROPDOWN: IMÓVEIS -->
+        <div class="relative group">
+          <button class="flex items-center gap-1.5 py-2 hover:text-brand-600 transition font-semibold text-sm">
+            <span>Imóveis</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-hover:rotate-180 group-hover:text-brand-600 transition duration-200"></i>
+          </button>
+          
+          <!-- Menu Flutuante Dropdown -->
+          <div class="absolute left-0 top-full pt-2 w-64 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-50">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-2 text-xs font-medium space-y-1">
+              <a href="portfolio.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-800 hover:text-brand-600 transition">
+                <div class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">Todos os Imóveis</span>
+                  <span class="text-[11px] text-slate-400">Ver carteira completa</span>
+                </div>
+              </a>
+              <a href="portfolio.html?finalidade=VENDA" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-800 hover:text-brand-600 transition">
+                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="key" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">Comprar Imóveis</span>
+                  <span class="text-[11px] text-slate-400">Casas, aptos e terrenos</span>
+                </div>
+              </a>
+              <a href="portfolio.html?finalidade=ALUGUEL" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-800 hover:text-brand-600 transition">
+                <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="building" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">Alugar (Locação)</span>
+                  <span class="text-[11px] text-slate-400">Aluguel descomplicado</span>
+                </div>
+              </a>
+              <div class="border-t border-slate-100 my-1"></div>
+              <a href="portfolio.html?tipo=Casa+Condominio" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-brand-600 transition">
+                <i data-lucide="home" class="w-4 h-4 text-slate-400"></i>
+                <span>Casas em Condomínio</span>
+              </a>
+              <a href="portfolio.html?tipo=Apartamento+Padrao" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-brand-600 transition">
+                <i data-lucide="layers" class="w-4 h-4 text-slate-400"></i>
+                <span>Apartamentos Padrão</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- LANÇAMENTOS -->
+        <a href="#lancamentos" class="hover:text-brand-600 transition flex items-center gap-1.5">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-600 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-600"></span>
+          </span>
+          Lançamentos
+        </a>
+
+        <!-- BOTÃO ESPECIAL: LINHA PREMIUM -->
+        <a href="colecao-premium.html" class="group px-3.5 py-1.5 rounded-full bg-slate-900 text-gold-400 text-xs font-bold tracking-wide uppercase flex items-center gap-2 hover:bg-black transition shadow-sm border border-gold-500/40">
+          <img src="LOGO_MEDI_PREMIUM_colorido.png" alt="Mediterrâneo Premium" class="h-4 w-auto object-contain">
+          <span>Coleção Premium</span>
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-gold-400 group-hover:rotate-12 transition"></i>
+        </a>
+
+        <!-- SOBRE A EMPRESA -->
+        <a href="#sobre" class="hover:text-brand-600 transition">
+          Sobre a Empresa
+        </a>
+
+        <!-- PARCEIROS -->
+        <a href="#parceiros" class="hover:text-brand-600 transition">
+          Parceiros
+        </a>
+      </nav>
+
+      <!-- COLUNA 3 (1fr): BOTÃO ANUNCIE SEU IMÓVEL ALINHADO À DIREITA -->
+      <div class="flex items-center justify-end min-w-0">
+        <button onclick="openModal('modal-proprietario')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 hover:border-brand-900 bg-white hover:bg-slate-50 text-slate-800 hover:text-brand-950 text-xs font-bold transition shadow-xs whitespace-nowrap">
+          <i data-lucide="home" class="w-4 h-4 text-brand-600"></i>
+          Anuncie seu Imóvel
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+    </div>
+  </header>
+
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 3. HERO SECTION COM MEGA BUSCADOR UNIFICADO-->
+  <!-- ========================================== -->
+  <section class="relative bg-brand-950 pt-16 pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden text-white">
+    <!-- Imagem de fundo com overlay elegante -->
+    <div class="absolute inset-0 z-0 opacity-25 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-brand-950/90 via-brand-950/80 to-slate-50 z-0"></div>
+
+    <div class="relative z-10 max-w-5xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-900/90 border border-brand-800 text-gold-400 text-xs font-semibold uppercase tracking-wider mb-4 shadow-sm">
+        <i data-lucide="award" class="w-3.5 h-3.5"></i>
+        Líder em Jundiaí e Região • Tradição & Divisão Premium
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 max-w-3xl mx-auto leading-tight">
+        O imóvel ideal para sua vida, da planta ao alto padrão.
+      </h1>
+      <p class="text-slate-300 text-base sm:text-lg mb-8 max-w-2xl mx-auto font-normal">
+        A tradição de mais de 40 anos da <span class="text-white font-semibold">Mediterrâneo</span> unida à curadoria exclusiva da divisão <span class="text-gold-400 font-semibold">Mediterrâneo Premium</span>.
+      </p>
+
+      <!-- ================= BUSCADOR MULTI-ABAS ================= -->
+      <div id="buscador" class="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 text-slate-800 text-left border border-slate-200 transition-all">
+        
+        <!-- Abas do Buscador Centralizadas com o Título -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 border-b border-slate-200 pb-3 mb-5">
+          <button onclick="setSearchTab('comprar')" id="tab-comprar" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-brand-900 text-white transition flex items-center gap-2 shadow-sm">
+            <i data-lucide="key" class="w-4 h-4"></i>
+            Comprar
+          </button>
+          <button onclick="setSearchTab('alugar')" id="tab-alugar" class="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+            <i data-lucide="building" class="w-4 h-4"></i>
+            Alugar
+          </button>
+          <button onclick="setSearchTab('lancamentos')" id="tab-lancamentos" class="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+            <i data-lucide="compass" class="w-4 h-4 text-brand-600"></i>
+            Lançamentos
+          </button>
+          <button onclick="setSearchTab('premium')" id="tab-premium" class="px-4 py-2.5 rounded-xl font-bold text-xs bg-slate-900 text-gold-400 hover:bg-black transition flex items-center gap-2 border border-gold-500/40 shadow-sm">
+            <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i>
+            Mediterrâneo Premium
+          </button>
+        </div>
+
+        <!-- Banner Dinâmico Ativado no Modo Premium -->
+        <div id="search-premium-banner" class="hidden mb-4 p-3 rounded-xl bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 border border-gold-500/40 text-xs text-gold-300 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4 text-gold-400 flex-shrink-0"></i>
+            <span><strong>Modo Premium Ativado:</strong> Buscando propriedades selecionadas de alto padrão com assessoria private.</span>
+          </div>
+          <a href="#premium" class="text-white hover:text-gold-400 underline font-semibold flex-shrink-0 ml-2">Ver Acervo VIP →</a>
+        </div>
+
+        <!-- Campos de Busca -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Tipo do Imóvel -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Tipo de Imóvel</label>
+            <div class="relative">
+              <select id="search-type" class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2.5 px-3 text-sm font-medium focus:ring-2 focus:ring-brand-600 focus:outline-none">
+                <option value="">Todos os Tipos</option>
+                <option value="casa">Casa Residencial</option>
+                <option value="condominio">Casa em Condomínio</option>
+                <option value="apartamento">Apartamento</option>
+                <option value="terreno">Terreno / Lote</option>
+                <option value="comercial">Comercial / Sala</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Bairro ou Região -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Bairro ou Região</label>
+            <div class="relative">
+              <input type="text" id="search-location" placeholder="Ex: Medeiros, Eloy Chaves, Anhangabaú" class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:ring-brand-600 focus:outline-none placeholder-slate-400">
+            </div>
+          </div>
+
+          <!-- Dormitórios -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Dormitórios</label>
+            <select id="search-bedrooms" class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2.5 px-3 text-sm font-medium focus:ring-2 focus:ring-brand-600 focus:outline-none">
+              <option value="">Qualquer quantidade</option>
+              <option value="1">1+ quartos</option>
+              <option value="2">2+ quartos</option>
+              <option value="3">3+ quartos</option>
+              <option value="4">4+ quartos / suítes</option>
+            </select>
+          </div>
+
+          <!-- Botão de Ação -->
+          <div class="flex items-end">
+            <button id="search-submit" onclick="executarBuscaHero()" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-bold py-2.5 px-5 rounded-lg text-sm flex items-center justify-center gap-2 shadow-lg shadow-brand-950/20 transition">
+              <i data-lucide="search" class="w-4 h-4 text-gold-400"></i>
+              Buscar Imóveis
+            </button>
+          </div>
+        </div>
+
+        <!-- Filtros Extras (Código e Refinamento) -->
+        <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
+          <div class="flex items-center gap-4">
+            <span class="font-medium text-slate-700">Filtros rápidos:</span>
+            <label class="flex items-center gap-1.5 cursor-pointer hover:text-brand-900">
+              <input type="checkbox" class="rounded text-brand-600"> Com Piscina
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer hover:text-brand-900">
+              <input type="checkbox" class="rounded text-brand-600"> Varanda Gourmet
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer hover:text-brand-900">
+              <input type="checkbox" class="rounded text-brand-600"> Aceita Permuta
+            </label>
+          </div>
+          <div class="flex items-center gap-2">
+            <span>Possui o código?</span>
+            <input type="text" id="input-codigo-busca" placeholder="Ex: 7716" class="w-24 bg-slate-100 border border-slate-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-brand-600 focus:outline-none" onkeydown="if(event.key === 'Enter') buscarPorCodigo()">
+            <button type="button" onclick="buscarPorCodigo()" class="text-brand-900 font-bold hover:underline">Ir</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 3.5 SEÇÃO EXCLUSIVA: AS DUAS DIVISÕES DA MARCA -->
+  <!-- ========================================== -->
+  <section id="divisoes" class="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto -mt-10 relative z-20">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- CARD DIVISÃO 1: MEDITERRÂNEO TRADICIONAL -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xl hover:shadow-2xl transition group flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="h-14 flex items-center">
+              <img src="LOGO_MEDITERRANEO.png" alt="Mediterrâneo Negócios Imobiliários" class="h-12 w-auto object-contain">
+            </div>
+            <span class="px-3 py-1 rounded-full bg-brand-50 text-brand-800 text-[11px] font-bold tracking-wide uppercase border border-brand-200">
+              Divisão Geral
+            </span>
+          </div>
+
+          <h3 class="text-xl sm:text-2xl font-extrabold text-brand-950 tracking-tight mb-2">
+            Mediterrâneo Negócios Imobiliários
+          </h3>
+          <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-5">
+            A imobiliária de maior tradição em Jundiaí e região. Mais de 3.400 opções para compra, venda e locação residencial ou comercial, além das melhores oportunidades em lançamentos com grandes construtoras.
+          </p>
+
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-700 font-medium mb-6">
+            <div class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+              <i data-lucide="check" class="w-4 h-4 text-brand-600"></i>
+              Compra & Venda Ágil
+            </div>
+            <div class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+              <i data-lucide="check" class="w-4 h-4 text-brand-600"></i>
+              Locação Sem Fiador
+            </div>
+            <div class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+              <i data-lucide="check" class="w-4 h-4 text-brand-600"></i>
+              Lançamentos na Planta
+            </div>
+            <div class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+              <i data-lucide="check" class="w-4 h-4 text-brand-600"></i>
+              Assessoria Jurídica Total
+            </div>
+          </div>
+        </div>
+
+        <a href="portfolio.html" class="w-full py-3 px-4 rounded-xl bg-brand-900 hover:bg-brand-800 text-white font-bold text-xs sm:text-sm text-center transition flex items-center justify-center gap-2 shadow-md">
+          Explorar Portfólio Geral
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+      <!-- CARD DIVISÃO 2: MEDITERRÂNEO PREMIUM -->
+      <div class="bg-gradient-to-br from-prime-dark via-[#0d1627] to-prime-dark rounded-3xl p-6 sm:p-8 border border-gold-500/40 shadow-xl hover:shadow-2xl transition group flex flex-col justify-between text-white relative overflow-hidden">
+        <!-- Brilho Dourado de Fundo -->
+        <div class="absolute -top-16 -right-16 w-60 h-60 bg-gold-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center justify-between mb-4">
+            <div class="h-14 flex items-center">
+              <img src="LOGO_MEDI_PREMIUM_colorido.png" alt="Mediterrâneo Premium" class="h-12 w-auto object-contain">
+            </div>
+            <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[11px] font-bold tracking-wide uppercase border border-gold-500/40 flex items-center gap-1">
+              <i data-lucide="crown" class="w-3 h-3"></i> Alto Padrão
+            </span>
+          </div>
+
+          <h3 class="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight mb-2">
+            Mediterrâneo <span class="text-gold-400 italic">Premium</span>
+          </h3>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-5">
+            Divisão boutique dedicada a residências e coberturas de alto padrão nos condomínios mais nobres de Jundiaí e região. Atendimento exclusivo com corretores especialistas.
+          </p>
+
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-200 font-medium mb-6">
+            <div class="flex items-center gap-2 bg-slate-900/80 p-2.5 rounded-lg border border-gold-500/20">
+              <i data-lucide="sparkles" class="w-4 h-4 text-gold-400"></i>
+              Mansões em Condomínio
+            </div>
+            <div class="flex items-center gap-2 bg-slate-900/80 p-2.5 rounded-lg border border-gold-500/20">
+              <i data-lucide="sparkles" class="w-4 h-4 text-gold-400"></i>
+              Corretor Especialista Dedicado
+            </div>
+            <div class="flex items-center gap-2 bg-slate-900/80 p-2.5 rounded-lg border border-gold-500/20">
+              <i data-lucide="sparkles" class="w-4 h-4 text-gold-400"></i>
+              Curadoria Rigorosa
+            </div>
+            <div class="flex items-center gap-2 bg-slate-900/80 p-2.5 rounded-lg border border-gold-500/20">
+              <i data-lucide="sparkles" class="w-4 h-4 text-gold-400"></i>
+              Assessoria Completa
+            </div>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex gap-2">
+          <a href="colecao-premium.html" class="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:opacity-90 text-brand-950 font-bold text-xs sm:text-sm text-center transition flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20">
+            Conhecer Coleção Premium
+            <i data-lucide="arrow-right" class="w-4 h-4 text-brand-950"></i>
+          </a>
+          <button onclick="openModal('modal-premium')" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-gold-400 text-xs font-bold transition border border-gold-500/30">
+            Fale com o Corretor
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 4. VITRINE DE LANÇAMENTOS (EMPREENDIMENTOS)-->
+  <!-- ========================================== -->
+  <section id="lancamentos" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-brand-600 font-bold text-xs uppercase tracking-widest mb-1">
+          <i data-lucide="compass" class="w-4 h-4"></i>
+          Novos Empreendimentos
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-950 tracking-tight">
+          Lançamentos em Destaque em Jundiaí e Região
+        </h2>
+        <p class="text-slate-500 text-sm mt-1">Imóveis na planta, em obras e recém-entregues das melhores construtoras parceiras.</p>
+      </div>
+      <a href="lancamento.html?id=doppio" class="inline-flex items-center gap-2 text-sm font-bold text-brand-900 hover:text-brand-600 transition">
+        Ver catálogo completo de lançamentos
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+
+    <!-- Cards de Lançamentos -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Card Lançamento 1: Doppio Jundiaí -->
+      <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition group flex flex-col justify-between">
+        <div>
+          <div class="relative h-60 overflow-hidden bg-slate-100">
+            <a href="lancamento.html?id=doppio" class="block w-full h-full cursor-pointer">
+              <img src="https://mediterraneo.imb.br/imoveis/capa/1782837939.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Doppio Jundiaí">
+            </a>
+            <div class="absolute top-3 left-3 bg-brand-900/90 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide backdrop-blur-sm pointer-events-none">
+              Lançamento • Em Construção
+            </div>
+            
+            <!-- WhatsApp Flutuante na foto -->
+            <a href="https://wa.me/5511989615940?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20e%20plantas%20do%20lan%C3%A7amento%20Doppio%20Jundia%C3%AD." target="_blank" title="Falar no WhatsApp sobre Doppio Jundiaí" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-lg hover:scale-110 transition z-10">
+              <i data-lucide="phone" class="w-4 h-4"></i>
+            </a>
+
+            <div class="absolute bottom-3 left-3 bg-white/90 text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-md backdrop-blur-sm pointer-events-none">
+              Construtora Santa Angela
+            </div>
+          </div>
+
+          <div class="p-5">
+            <span class="text-xs font-semibold text-brand-600 uppercase tracking-wide">Apartamentos de Alto Padrão</span>
+            <a href="lancamento.html?id=doppio" class="block">
+              <h3 class="text-lg font-bold text-slate-900 mt-1 group-hover:text-brand-600 transition">Doppio Jundiaí</h3>
+            </a>
+            <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-600"></i> Jardim Campos Elísios, Jundiaí/SP
+            </p>
+
+            <div class="grid grid-cols-3 gap-2 my-4 py-3 border-y border-slate-100 text-center">
+              <div>
+                <span class="block text-xs font-bold text-slate-800">156 a 210 m²</span>
+                <span class="text-[10px] text-slate-500">Área Privativa</span>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-800">4 suítes</span>
+                <span class="text-[10px] text-slate-500">Pé-Direito Duplo</span>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-800">4 vagas</span>
+                <span class="text-[10px] text-slate-500">Cobertas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 pt-0">
+          <div class="pt-3 border-t border-slate-100">
+            <div class="mb-3">
+              <span class="text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">Unidades a partir de</span>
+              <span class="text-xl font-extrabold text-brand-900 block mt-0.5 whitespace-nowrap">R$ 1.650.000</span>
+            </div>
+            <a href="lancamento.html?id=doppio" class="w-full py-2.5 px-3 rounded-xl bg-brand-50 hover:bg-brand-900 text-brand-900 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm group-hover:bg-brand-900 group-hover:text-white">
+              Ver Detalhes e Características
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Lançamento 2: Residencial Santorini -->
+      <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition group flex flex-col justify-between">
+        <div>
+          <div class="relative h-60 overflow-hidden bg-slate-100">
+            <a href="lancamento.html?id=santorini" class="block w-full h-full cursor-pointer">
+              <img src="https://mediterraneo.imb.br/imoveis/capa/1760724985.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Residencial Santorini">
+            </a>
+            <div class="absolute top-3 left-3 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide pointer-events-none">
+              Lançamento Oficial
+            </div>
+            
+            <!-- WhatsApp Flutuante na foto -->
+            <a href="https://wa.me/5511989615940?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20e%20plantas%20do%20Residencial%20Santorini." target="_blank" title="Falar no WhatsApp sobre Residencial Santorini" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-lg hover:scale-110 transition z-10">
+              <i data-lucide="phone" class="w-4 h-4"></i>
+            </a>
+
+            <div class="absolute bottom-3 left-3 bg-white/90 text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-md backdrop-blur-sm pointer-events-none">
+              Construtora Santa Angela
+            </div>
+          </div>
+
+          <div class="p-5">
+            <span class="text-xs font-semibold text-brand-600 uppercase tracking-wide">Apartamentos</span>
+            <a href="lancamento.html?id=santorini" class="block">
+              <h3 class="text-lg font-bold text-slate-900 mt-1 group-hover:text-brand-600 transition">Residencial Santorini</h3>
+            </a>
+            <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-600"></i> Jardim Bonfiglioli, Jundiaí/SP
+            </p>
+
+            <div class="grid grid-cols-3 gap-2 my-4 py-3 border-y border-slate-100 text-center">
+              <div>
+                <span class="block text-xs font-bold text-slate-800">83 a 111 m²</span>
+                <span class="text-[10px] text-slate-500">Área Privativa</span>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-800">2 a 3</span>
+                <span class="text-[10px] text-slate-500">Dorms / Suítes</span>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-800">2 vagas</span>
+                <span class="text-[10px] text-slate-500">Cobertas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 pt-0">
+          <div class="pt-3 border-t border-slate-100">
+            <div class="mb-3">
+              <span class="text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">Unidades a partir de</span>
+              <span class="text-xl font-extrabold text-brand-900 block mt-0.5 whitespace-nowrap">R$ 780.000</span>
+            </div>
+            <a href="lancamento.html?id=santorini" class="w-full py-2.5 px-3 rounded-xl bg-brand-50 hover:bg-brand-900 text-brand-900 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm group-hover:bg-brand-900 group-hover:text-white">
+              Ver Detalhes e Características
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Lançamento 3: Allegrato Medeiros -->
+      <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition group flex flex-col justify-between">
+        <div>
+          <div class="relative h-60 overflow-hidden bg-slate-100">
+            <a href="lancamento.html?id=allegrato" class="block w-full h-full cursor-pointer">
+              <img src="https://mediterraneo.imb.br/imoveis/capa/1782840955.jpg" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Allegrato Medeiros">
+            </a>
+            <div class="absolute top-3 left-3 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide pointer-events-none">
+              Lançamento Oficial
+            </div>
+            
+            <!-- WhatsApp Flutuante na foto -->
+            <a href="https://wa.me/5511989615940?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20e%20plantas%20do%20Allegrato%20Medeiros." target="_blank" title="Falar no WhatsApp sobre Allegrato Medeiros" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-lg hover:scale-110 transition z-10">
+              <i data-lucide="phone" class="w-4 h-4"></i>
+            </a>
+
+            <div class="absolute bottom-3 left-3 bg-white/90 text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-md backdrop-blur-sm pointer-events-none">
+              Construtora Santa Angela
+            </div>
+          </div>
+
+          <div class="p-5">
+            <span class="text-xs font-semibold text-brand-600 uppercase tracking-wide">Apartamentos</span>
+            <a href="lancamento.html?id=allegrato" class="block">
+              <h3 class="text-lg font-bold text-slate-900 mt-1 group-hover:text-brand-600 transition">Allegrato Medeiros</h3>
+            </a>
+            <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-600"></i> Bairro Medeiros, Jundiaí/SP
+            </p>
+
+            <div class="grid grid-cols-3 gap-2 my-4 py-3 border-y border-slate-100 text-center">
+              <div>
+                <span class="block text-xs font-bold text-slate-800">55 a 64 m²</span>
+                <span class="text-[10px] text-slate-500">Área Privativa</span>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-800">2 quartos</span>
+                <span class="text-[10px] text-slate-500">1 Suíte</span>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-800">1 ou 2</span>
+                <span class="text-[10px] text-slate-500">Vagas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 pt-0">
+          <div class="pt-3 border-t border-slate-100">
+            <div class="mb-3">
+              <span class="text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">Unidades a partir de</span>
+              <span class="text-xl font-extrabold text-brand-900 block mt-0.5 whitespace-nowrap">R$ 420.000</span>
+            </div>
+            <a href="lancamento.html?id=allegrato" class="w-full py-2.5 px-3 rounded-xl bg-brand-50 hover:bg-brand-900 text-brand-900 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm group-hover:bg-brand-900 group-hover:text-white">
+              Ver Detalhes e Características
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 5. IMÓVEIS PRONTOS (VENDA & LOCAÇÃO)      -->
+  <!-- ========================================== -->
+  <section class="py-16 bg-slate-100/70 border-y border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-950 tracking-tight">
+            Imóveis Prontos para Venda e Locação
+          </h2>
+          <p class="text-slate-500 text-sm mt-1">Mais de 3.400 opções cadastradas com verificação documental rigorosa.</p>
+        </div>
+
+        <!-- Abas de Filtro da Vitrine (Dinâmica) -->
+        <div class="flex flex-wrap items-center gap-2 bg-white p-1 rounded-xl border border-slate-200">
+          <button id="btn-filtro-todos" onclick="filtrarVitrine('todos')" class="px-4 py-2 rounded-lg text-xs font-bold bg-brand-900 text-white shadow-sm transition">Todos os Imóveis</button>
+          <button id="btn-filtro-venda" onclick="filtrarVitrine('venda')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-brand-900 transition">Destaques Venda</button>
+          <button id="btn-filtro-aluguel" onclick="filtrarVitrine('aluguel')" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-brand-900 transition">Destaques Aluguel</button>
+          <button id="btn-filtro-premium" onclick="filtrarVitrine('premium')" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-900 text-gold-400 hover:bg-black transition flex items-center gap-1.5 border border-gold-500/40">
+            <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i>
+            Selo Premium
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid de Imóveis Prontos Dinâmico -->
+      <div id="vitrine-imoveis-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Renderizado dinamicamente via imoveis.js -->
+      </div>
+
+      <div class="text-center mt-10">
+        <a href="portfolio.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-900 text-white font-bold text-sm hover:bg-brand-800 transition shadow-md">
+          Explorar todo o Portfólio de Imóveis
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- ========================================== -->
+  <!-- 6. VERTICAL "MEDITERRÂNEO PREMIUM" (ALTO PADRÃO & LUXO) -->
+  <!-- ========================================== -->
+  <section id="premium" class="py-24 bg-gradient-to-b from-[#050a14] via-[#091222] to-[#050a14] text-white border-t border-gold-500/30 relative overflow-hidden">
+    <!-- Anchor para manter retrocompatibilidade -->
+    <div id="prime" class="absolute -top-10 left-0"></div>
+
+    <!-- Detalhes dourados e azuis de fundo -->
+    <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-gold-500/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-24 bottom-0 w-96 h-96 rounded-full bg-brand-600/10 blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <!-- CABEÇALHO DA SEÇÃO COM A LOGO OFICIAL PREMIUM BRANCA -->
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-12 gap-8 pb-10 border-b border-gold-500/20">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-gold-500/40 shadow-2xl backdrop-blur-md">
+            <img src="LOGO_MEDI_PREMIUM_branco.png" alt="Mediterrâneo Premium" class="h-16 sm:h-20 w-auto object-contain">
+          </div>
+          <div>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gold-500/15 border border-gold-500/50 text-gold-400 text-xs font-bold uppercase tracking-widest mb-2.5">
+              <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i>
+              Divisão Private • Exclusividade e Alto Padrão
+            </div>
+            <h2 class="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight">
+              Seleção <span class="text-gold-400 italic">Mediterrâneo</span>
+            </h2>
+            <p class="text-slate-300 text-xs sm:text-sm mt-1.5 max-w-2xl leading-relaxed">
+              Mansões e residências exclusivas nos condomínios mais prestigiados de Jundiaí, Campinas e região. Assessoria imobiliária completa com corretores especialistas.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
+          <button onclick="openModal('modal-premium')" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-brand-950 font-black text-xs uppercase tracking-wider hover:opacity-95 transition shadow-xl shadow-gold-500/20 flex items-center gap-2">
+            <i data-lucide="user-check" class="w-4 h-4"></i>
+            Falar com Corretor
+          </button>
+          <a href="https://wa.me/5511990237149?text=Olá,%20gostaria%20de%20atendimento%20Mediterrâneo%20Premium" target="_blank" class="px-4 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-gold-400 border border-gold-500/40 text-xs font-bold transition flex items-center gap-2">
+            <i data-lucide="message-square" class="w-4 h-4"></i>
+            WhatsApp Premium
+          </a>
+        </div>
+      </div>
+
+      <!-- FILTRO RÁPIDO: CONDOMÍNIOS NOBRES DE JUNDIAÍ E REGIÃO -->
+      <div class="mb-10 bg-slate-900/60 p-4 sm:p-5 rounded-2xl border border-gold-500/20">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-gold-400 flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4"></i>
+            Filtrar por Condomínio Consagrado:
+          </span>
+          <span class="text-[11px] text-slate-400">Exibindo apenas propriedades à venda com alto rigor de curadoria</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="renderPremiumVitrine('todos')" data-condo="todos" class="btn-condo-filter px-4 py-2 rounded-full text-xs font-bold bg-gold-500 text-brand-950 shadow-md shadow-gold-500/20 transition cursor-pointer">
+            Todos os Condomínios
+          </button>
+          <button onclick="renderPremiumVitrine('Reserva da Serra')" data-condo="Reserva da Serra" class="btn-condo-filter px-4 py-2 rounded-full text-xs font-medium bg-slate-900/80 border border-gold-500/30 text-slate-300 hover:text-gold-400 hover:border-gold-500/60 transition cursor-pointer">
+            Reserva da Serra
+          </button>
+          <button onclick="renderPremiumVitrine('Malota')" data-condo="Malota" class="btn-condo-filter px-4 py-2 rounded-full text-xs font-medium bg-slate-900/80 border border-gold-500/30 text-slate-300 hover:text-gold-400 hover:border-gold-500/60 transition cursor-pointer">
+            Palmeiras da Malota
+          </button>
+          <button onclick="renderPremiumVitrine('Alvorada')" data-condo="Alvorada" class="btn-condo-filter px-4 py-2 rounded-full text-xs font-medium bg-slate-900/80 border border-gold-500/30 text-slate-300 hover:text-gold-400 hover:border-gold-500/60 transition cursor-pointer">
+            Terras da Alvorada
+          </button>
+          <button onclick="renderPremiumVitrine('Novo Mundo')" data-condo="Novo Mundo" class="btn-condo-filter px-4 py-2 rounded-full text-xs font-medium bg-slate-900/80 border border-gold-500/30 text-slate-300 hover:text-gold-400 hover:border-gold-500/60 transition cursor-pointer">
+            Jardim Novo Mundo
+          </button>
+          <button onclick="renderPremiumVitrine('Villagio Paradiso')" data-condo="Villagio Paradiso" class="btn-condo-filter px-4 py-2 rounded-full text-xs font-medium bg-slate-900/80 border border-gold-500/30 text-slate-300 hover:text-gold-400 hover:border-gold-500/60 transition cursor-pointer">
+            Villagio Paradiso
+          </button>
+        </div>
+      </div>
+
+      <!-- DIFERENCIAIS DA LINHA PREMIUM -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div class="bg-slate-900/60 p-6 rounded-2xl border border-gold-500/20 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 flex-shrink-0">
+            <i data-lucide="award" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h4 class="font-serif font-bold text-white text-base mb-1">Corretores Especialistas em Alto Padrão</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">Atendimento consultivo com profissionais dedicados que conhecem a fundo os principais condomínios fechados e a dinâmica de mercado da região.</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/60 p-6 rounded-2xl border border-gold-500/20 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 flex-shrink-0">
+            <i data-lucide="shield-check" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h4 class="font-serif font-bold text-white text-base mb-1">Segurança Jurídica & Tradição</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">Mais de 40 anos de credibilidade e corpo jurídico próprio para garantir tranquilidade, clareza e solidez em todas as etapas da negociação.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- VITRINE DINÂMICA DE PROPRIEDADES PREMIUM -->
+      <div id="vitrine-premium-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Renderizado dinamicamente via renderPremiumVitrine() -->
+      </div>
+
+      <!-- BOTÃO VER TODA A COLEÇÃO PREMIUM -->
+      <div class="text-center mt-12">
+        <a href="colecao-premium.html" class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-slate-950 font-black text-xs uppercase tracking-wider hover:opacity-95 transition shadow-xl shadow-gold-500/25">
+          <i data-lucide="crown" class="w-4 h-4"></i>
+          Acessar Toda a Coleção Privativa Premium (R$ 2M+)
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+      <!-- BANNER DE CAPTAÇÃO PRIVATE -->
+      <div class="mt-14 p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-gold-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
+        <div class="flex items-center gap-5">
+          <div class="w-14 h-14 rounded-2xl bg-gold-500/10 border border-gold-500/40 flex items-center justify-center text-gold-400 flex-shrink-0">
+            <i data-lucide="crown" class="w-7 h-7"></i>
+          </div>
+          <div>
+            <h4 class="text-lg sm:text-xl font-serif font-bold text-white">Deseja anunciar sua propriedade de alto padrão?</h4>
+            <p class="text-slate-300 text-xs sm:text-sm mt-1">Conectamos seu imóvel a compradores qualificados com assessoria de corretores especialistas e ampla visibilidade qualificada.</p>
+          </div>
+        </div>
+        <button onclick="openModal('modal-proprietario')" class="px-6 py-3.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-brand-950 font-extrabold text-xs uppercase tracking-wider transition whitespace-nowrap shadow-lg shadow-gold-500/20">
+          Anunciar no Mediterrâneo Premium
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 7. PARA PROPRIETÁRIOS (ANUNCIE SEU IMÓVEL) -->
+  <!-- ========================================== -->
+  <section id="proprietarios" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 sm:p-10 text-white relative overflow-hidden shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-8 border border-slate-700/60">
+      <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+        <i data-lucide="home" class="w-64 h-64 text-white"></i>
+      </div>
+      <div class="relative z-10 max-w-2xl">
+        <span class="inline-flex items-center gap-1 text-brand-400 font-bold text-xs uppercase tracking-wider mb-2">
+          <i data-lucide="tag" class="w-4 h-4"></i>
+          Para Proprietários
+        </span>
+        <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2 text-white">
+          Quer Vender ou Alugar com Rapidez e Segurança?
+        </h3>
+        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+          Seu imóvel anunciado com fotos profissionais nos maiores portais do Brasil (ZAP, VivaReal, Imovelweb), avaliação técnica e gestão digital completa de contratos.
+        </p>
+        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-300 font-medium">
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i> Análise de crédito minuciosa</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i> Fotografia profissional gratuita</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i> Gestão jurídica completa</span>
+        </div>
+      </div>
+      <div class="relative z-10 flex-shrink-0">
+        <button onclick="openModal('modal-proprietario')" class="w-full sm:w-auto px-7 py-3.5 bg-white hover:bg-slate-100 text-brand-950 font-bold text-sm rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+          Anunciar meu Imóvel Agora
+          <i data-lucide="arrow-right" class="w-4 h-4 text-brand-950"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 8. SEÇÃO SOBRE A EMPRESA (QUEM SOMOS)     -->
+  <!-- ========================================== -->
+  <section id="sobre" class="py-20 bg-slate-50 border-t border-slate-200 relative overflow-hidden">
+    <!-- Efeito de fundo sutil -->
+    <div class="absolute -top-40 -right-40 w-96 h-96 bg-brand-100/50 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-gold-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <!-- Cabeçalho da Seção -->
+      <div class="max-w-3xl mb-16">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-100 text-brand-900 text-xs font-bold uppercase tracking-wider mb-3">
+          <i data-lucide="shield-check" class="w-4 h-4 text-brand-600"></i>
+          Tradição, Ética e Solidez • CRECI 22189-J
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-950 tracking-tight leading-tight">
+          Mais de 40 Anos de Pioneirismo no Mercado Imobiliário
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-4 leading-relaxed">
+          Fundada em Jundiaí, a <strong>Mediterrâneo Negócios Imobiliários</strong> (Tirreno Negócios Imobiliários Ltda.) consolidou-se como uma das maiores referências do interior paulista, unindo atendimento humanizado, rigor jurídico e visão de futuro para realizar os projetos de vida de milhares de famílias e investidores.
+        </p>
+      </div>
+
+      <!-- Métricas / Números de Autoridade -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-16">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-900 flex items-center justify-center font-bold mb-3">
+            <i data-lucide="calendar" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <span class="block text-3xl font-extrabold text-brand-950 tracking-tight">+40 Anos</span>
+          <span class="text-xs text-slate-500 font-medium">De história e credibilidade contínua em Jundiaí e região</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-xl bg-gold-50 text-gold-600 flex items-center justify-center font-bold mb-3">
+            <i data-lucide="users" class="w-5 h-5 text-gold-600"></i>
+          </div>
+          <span class="block text-3xl font-extrabold text-brand-950 tracking-tight">+15 Mil</span>
+          <span class="text-xs text-slate-500 font-medium">Famílias e investidores atendidos com total satisfação</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold mb-3">
+            <i data-lucide="file-check" class="w-5 h-5 text-emerald-600"></i>
+          </div>
+          <span class="block text-3xl font-extrabold text-brand-950 tracking-tight">100%</span>
+          <span class="text-xs text-slate-500 font-medium">Segurança jurídica e análise documental em cada negócio</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold mb-3">
+            <i data-lucide="map-pin" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <span class="block text-3xl font-extrabold text-brand-950 tracking-tight">Sede Própria</span>
+          <span class="text-xs text-slate-500 font-medium">Localização nobre na Chácara Urbana em Jundiaí</span>
+        </div>
+      </div>
+
+      <!-- Grid Duplo: Nossa Trajetória & Estrutura Especializada -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16">
+        
+        <!-- Texto Institucional e Sede -->
+        <div class="lg:col-span-7 space-y-5">
+          <h3 class="text-2xl font-bold text-slate-900 tracking-tight">
+            Uma relação de confiança que atravessa gerações
+          </h3>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Ao longo de quatro décadas, acompanhamos de perto a transformação e a valorização de Jundiaí e das cidades vizinhas. Desde a urbanização dos bairros mais tradicionais até a consolidação dos condomínios fechados mais cobiçados do estado de São Paulo, a Mediterrâneo esteve presente como elo seguro entre proprietários e compradores.
+          </p>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Nosso compromisso vai muito além de intermediar imóveis: oferecemos uma verdadeira assessoria patrimonial e consultiva. Cada transação conta com o respaldo de um time multidisciplinar, incluindo corretores especialistas por segmento, departamento jurídico interno e suporte integral para financiamentos bancários e transferências documentais.
+          </p>
+
+          <!-- Card de Localização da Sede -->
+          <div class="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4">
+            <div class="flex items-start gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-brand-900 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i data-lucide="building-2" class="w-5 h-5 text-gold-400"></i>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Nossa Sede em Jundiaí</span>
+                <span class="block text-sm font-bold text-slate-900">Rua Culto à Ciência, 96</span>
+                <span class="text-xs text-slate-500">Chácara Urbana • Jundiaí/SP • CEP 13209-020</span>
+              </div>
+            </div>
+            <a href="https://wa.me/5511989615940?text=Olá!%20Gostaria%20de%20agendar%20uma%20reunião%20na%20sede%20da%20Mediterrâneo." target="_blank" class="px-4 py-2.5 rounded-xl bg-brand-50 hover:bg-brand-900 text-brand-900 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 flex-shrink-0">
+              <i data-lucide="map" class="w-4 h-4"></i>
+              Visitar Nossa Sede
+            </a>
+          </div>
+        </div>
+
+        <!-- 4 Áreas de Especialização -->
+        <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:border-brand-600/40 transition">
+            <i data-lucide="home" class="w-6 h-6 text-brand-600 mb-2"></i>
+            <h4 class="font-bold text-sm text-slate-900">Venda & Locação</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Carteira qualificada de imóveis prontos residenciais e comerciais com ampla divulgação nos maiores portais.</p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-white border border-gold-500/30 shadow-sm hover:border-gold-500 transition">
+            <i data-lucide="crown" class="w-6 h-6 text-gold-500 mb-2"></i>
+            <h4 class="font-bold text-sm text-slate-900">Divisão Premium</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Assessoria privativa e exclusiva para mansões e propriedades acima de R$ 2 milhões nos condomínios de maior prestígio.</p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:border-brand-600/40 transition">
+            <i data-lucide="hard-hat" class="w-6 h-6 text-brand-600 mb-2"></i>
+            <h4 class="font-bold text-sm text-slate-900">Lançamentos Oficiais</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Parcerias diretas com as construtoras mais sólidas do estado (como Santa Angela), com condições exclusivas na planta.</p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:border-brand-600/40 transition">
+            <i data-lucide="scale" class="w-6 h-6 text-emerald-600 mb-2"></i>
+            <h4 class="font-bold text-sm text-slate-900">Segurança Jurídica</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Corpo jurídico interno dedicado à análise cadastral minuciosa, elaboração de contratos e esteira de financiamento bancário.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Missão, Visão e Valores -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-200">
+        <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-900 flex items-center justify-center font-bold mb-4">
+            <i data-lucide="target" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <h4 class="text-base font-extrabold text-brand-950 mb-2">Nossa Missão</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Oferecer um atendimento humanizado e consultivo de excelência, compreendendo com precisão as necessidades e momentos de vida de cada cliente para conduzir negociações transparentes, seguras e bem-sucedidas.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-900 flex items-center justify-center font-bold mb-4">
+            <i data-lucide="compass" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <h4 class="text-base font-extrabold text-brand-950 mb-2">Nossa Visão</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Consolidar-se permanentemente como a principal referência de credibilidade, alto padrão de governança e inovação contínua no mercado imobiliário de Jundiaí e de todo o interior de São Paulo.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-900 flex items-center justify-center font-bold mb-4">
+            <i data-lucide="award" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <h4 class="text-base font-extrabold text-brand-950 mb-2">Nossos Valores</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Valorização humana genuína, ética inegociável, transparência absoluta em cada cláusula, respeito aos interesses dos clientes e comprometimento contínuo com a evolução dos nossos profissionais.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 9. SEJA UM CORRETOR PARCEIRO (B2B)        -->
+  <!-- ========================================== -->
+  <section id="corretor-parceiro" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="bg-gradient-to-br from-brand-950 via-[#0a182c] to-brand-950 rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-2xl border border-brand-900/60">
+      
+      <!-- Detalhes visuais de fundo -->
+      <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+        <i data-lucide="handshake" class="w-80 h-80 text-white"></i>
+      </div>
+      <div class="absolute top-0 right-1/4 w-96 h-96 bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-7">
+          <span class="inline-flex items-center gap-1.5 text-gold-400 font-bold text-xs uppercase tracking-wider mb-3 px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/20">
+            <i data-lucide="handshake" class="w-3.5 h-3.5"></i>
+            Parceria Comercial B2B • Expansão Imobiliária
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4 text-white">
+            Seja um Corretor Parceiro Mediterrâneo
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base mb-6 leading-relaxed">
+            Una sua carteira de clientes à força de mais de 40 anos da imobiliária líder em Jundiaí e região. Tenha acesso prioritário aos maiores lançamentos, condomínios fechados e suporte operacional de alto nível.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-200 font-medium mb-8">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+              <span>Carteira com dezenas de lançamentos oficiais</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+              <span>Divisão transparente e ágil de honorários</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+              <span>Suporte jurídico interno e análise de contratos</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+              <span>Salas de reunião privativas na nossa sede</span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button onclick="openModal('modal-corretor')" class="px-6 py-3.5 bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-brand-950 font-black text-xs uppercase tracking-wider hover:opacity-95 transition shadow-lg shadow-gold-500/20 flex items-center justify-center gap-2 rounded-xl">
+              Cadastrar como Corretor Parceiro
+              <i data-lucide="arrow-right" class="w-4 h-4 text-brand-950"></i>
+            </button>
+            <a href="https://wa.me/5511989615940?text=Olá!%20Sou%20corretor%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20parceria%20com%20a%20Mediterrâneo." target="_blank" class="px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/20 text-xs font-bold transition flex items-center gap-2">
+              <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+              Falar com Gestão de Parcerias
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gold-500/20 border border-gold-500/40 text-gold-400 flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="trending-up" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1">Acelere Suas Vendas</h3>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">
+            Corretores autônomos e imobiliárias parceiras contam com inteligência comercial, financiamento bancário aprovado e esteira de fechamento acelerada.
+          </p>
+          <div class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-gold-400 bg-gold-500/10 px-3 py-1.5 rounded-full border border-gold-500/20">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            Mais de 40 anos de liderança e ética comercial
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 10. NOSSOS PARCEIROS (CONSTRUTORAS & INCORPORADORAS) -->
+  <!-- ========================================== -->
+  <section id="parceiros" class="py-16 bg-white border-t border-slate-200 text-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-2xl mx-auto mb-10">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider mb-2.5">
+          <i data-lucide="building" class="w-3.5 h-3.5 text-brand-600"></i>
+          Grandes Construtoras & Incorporadoras
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-brand-950 tracking-tight">
+          Nossos Parceiros
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-2">
+          Representamos com solidez e exclusividade os principais lançamentos e empreendimentos do interior paulista.
+        </p>
+      </div>
+
+      <!-- Grid com todos os 13 Parceiros Oficiais com Imagens Reais de mediterraneo.imb.br -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 items-center">
+        <!-- Parceiro 1 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/1.webp" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 2 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/1748460137.png" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 3 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/4.webp" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 4 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/5.webp" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 5 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/6.webp" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 6 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/9.webp" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 7 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/10.webp" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 8 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/13.webp" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 9 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/1765484846.png" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 10 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/1748461071.png" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 11 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/1765484777.png" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 12 -->
+        <div class="p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/1748465410.png" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+        <!-- Parceiro 13 -->
+        <div class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-1 p-4 bg-slate-50/70 hover:bg-white rounded-2xl border border-slate-200/80 hover:border-brand-600/30 shadow-xs hover:shadow-md transition duration-300 flex items-center justify-center h-24 group">
+          <img src="https://mediterraneo.imb.br/parceiros/1760445664.png" alt="Parceiro Oficial Construtora" loading="lazy" class="max-h-12 max-w-full object-contain grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 transition duration-300">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 9. FOOTER COMPLETO                        -->
+  <!-- ========================================== -->
+  <footer id="institucional" class="bg-brand-950 text-slate-400 text-xs pt-16 pb-12 border-t border-brand-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-brand-900/80">
+        
+        <!-- Coluna 1: Marca Principal & Endereço -->
+        <div class="lg:col-span-2">
+          <div class="mb-4">
+            <div class="bg-white p-2 rounded-xl shadow-sm inline-flex items-center">
+              <img src="LOGO_MEDITERRANEO.png" alt="Mediterrâneo Negócios Imobiliários" class="h-12 w-auto object-contain">
+            </div>
+          </div>
+          <p class="text-slate-400 leading-relaxed text-xs mb-4">
+            Tirreno Negócios Imobiliários Eireli • CRECI 22189-J<br>
+            Mais de 40 anos conectando famílias e investidores aos melhores imóveis de Jundiaí, Campinas e região.
+          </p>
+          <div class="space-y-1.5 text-slate-300">
+            <p class="flex items-center gap-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-brand-600"></i>
+              Rua Culto à Ciência, 96 - Chácara Urbana, Jundiaí/SP
+            </p>
+            <p class="flex items-center gap-2">
+              <i data-lucide="phone" class="w-4 h-4 text-brand-600"></i>
+              (11) 98961-5940 • recepcao@mediterraneoimoveis.com.br
+            </p>
+          </div>
+        </div>
+
+        <!-- Coluna 2: Imóveis Prontos -->
+        <div>
+          <h4 class="font-bold text-white text-sm mb-4 uppercase tracking-wider">Imóveis Prontos</h4>
+          <ul class="space-y-2.5">
+            <li><a href="portfolio.html" class="text-brand-400 font-bold hover:text-white transition">Ver Todo o Portfólio</a></li>
+            <li><a href="portfolio.html?finalidade=VENDA" class="hover:text-white transition">Comprar Imóveis</a></li>
+            <li><a href="portfolio.html?finalidade=ALUGUEL" class="hover:text-white transition">Imóveis para Alugar</a></li>
+            <li><a href="portfolio.html?tipo=Casa+Condominio" class="hover:text-white transition">Casas em Condomínio</a></li>
+            <li><a href="portfolio.html?tipo=Apartamento+Padrao" class="hover:text-white transition">Apartamentos</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 3: Divisão Mediterrâneo Premium -->
+        <div>
+          <div class="mb-3">
+            <img src="LOGO_MEDI_PREMIUM_branco.png" alt="Mediterrâneo Premium" class="h-9 w-auto object-contain">
+          </div>
+          <h4 class="font-bold text-gold-400 text-sm mb-3 uppercase tracking-wider">Mediterrâneo Premium</h4>
+          <ul class="space-y-2.5">
+            <li><a href="colecao-premium.html" class="text-gold-400 font-bold hover:underline transition flex items-center gap-1.5"><i data-lucide="crown" class="w-3.5 h-3.5"></i> Acessar Coleção VIP (R$ 2M+)</a></li>
+            <li><a href="colecao-premium.html" class="hover:text-white transition">Mansões em Condomínio</a></li>
+            <li><a href="colecao-premium.html" class="hover:text-white transition">Terrenos em Loteamentos Fechados</a></li>
+            <li><a href="javascript:openModal('modal-premium')" class="text-gold-400 hover:text-gold-300 font-semibold transition flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-gold-400"></i>
+              Falar com Corretor Especialista
+            </a></li>
+            <li><a href="#premium" class="hover:text-white transition">Condomínios Consagrados</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 4: Canais & Suporte -->
+        <div>
+          <h4 class="font-bold text-white text-sm mb-4 uppercase tracking-wider">Serviços & B2B</h4>
+          <ul class="space-y-2.5">
+            <li><a href="javascript:openModal('modal-corretor')" class="text-gold-400 hover:underline">Seja um Corretor Parceiro</a></li>
+            <li><a href="javascript:openModal('modal-proprietario')" class="hover:text-white transition">Cadastre seu Imóvel</a></li>
+            <li><a href="https://www.mediterraneoimoveis.com.br/ksi/clientes/acesso/login/" target="_blank" class="hover:text-white transition">Área do Cliente (CRM)</a></li>
+            <li><a href="#sobre" class="hover:text-white transition">Sobre a Empresa</a></li>
+            <li><a href="#parceiros" class="hover:text-white transition">Nossos Parceiros</a></li>
+            <li><a href="#divisoes" class="hover:text-white transition">Conheça as Divisões</a></li>
+            <li><a href="https://wa.me/5511989615940" target="_blank" class="hover:text-white transition">Fale com a Diretoria</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Copyright e Assinatura -->
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+        <div>
+          © 2026 Mediterrâneo Negócios Imobiliários. Todos os direitos reservados.
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#" class="hover:text-slate-300">Termos de Uso</a>
+          <a href="#" class="hover:text-slate-300">Política de Privacidade (LGPD)</a>
+          <a href="#" class="hover:text-slate-300">Mapa do Site</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- MODAL 1: SEJA UM CORRETOR PARCEIRO (B2B)  -->
+  <!-- ========================================== -->
+  <div id="modal-corretor" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-slate-200">
+      <button onclick="closeModal('modal-corretor')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-2 text-gold-600 font-bold text-xs uppercase tracking-wide mb-1">
+        <i data-lucide="handshake" class="w-4 h-4"></i>
+        Canal de Parceria B2B
+      </div>
+      <h3 class="text-xl sm:text-2xl font-extrabold text-brand-950">Cadastro de Corretor Parceiro</h3>
+      <p class="text-slate-500 text-xs mt-1 mb-5">Preencha seus dados profissionais para ter acesso à nossa carteira de lançamentos e condições de parceria.</p>
+
+      <form onsubmit="event.preventDefault(); alert('Cadastro de Corretor enviado com sucesso! Nossa equipe entrará em contato.'); closeModal('modal-corretor');" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nome Completo</label>
+          <input type="text" required placeholder="Seu nome" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">CRECI / UF</label>
+            <input type="text" required placeholder="Ex: 123456-F/SP" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">WhatsApp / Telefone</label>
+            <input type="tel" required placeholder="(11) 99999-9999" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">E-mail Profissional</label>
+          <input type="email" required placeholder="seuemail@exemplo.com" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Cidade Principal de Atuação</label>
+          <input type="text" required placeholder="Ex: Jundiaí, Itupeva, Campinas" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-brand-900 hover:bg-brand-800 text-white font-bold rounded-xl text-sm transition shadow-lg mt-2 flex items-center justify-center gap-2">
+          Enviar Cadastro de Parceria
+          <i data-lucide="check" class="w-4 h-4 text-gold-400"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 2: CADASTRE SEU IMÓVEL (PROPRIETÁRIO)-->
+  <!-- ========================================== -->
+  <div id="modal-proprietario" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-slate-200">
+      <button onclick="closeModal('modal-proprietario')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-2 text-brand-600 font-bold text-xs uppercase tracking-wide mb-1">
+        <i data-lucide="home" class="w-4 h-4"></i>
+        Para Proprietários
+      </div>
+      <h3 class="text-xl sm:text-2xl font-extrabold text-brand-950">Anuncie seu Imóvel</h3>
+      <p class="text-slate-500 text-xs mt-1 mb-5">Venda ou alugue com a assessoria completa da Mediterrâneo.</p>
+
+      <form onsubmit="event.preventDefault(); alert('Solicitação recebida com sucesso! Um corretor entrará em contato para agendar as fotos e avaliação.'); closeModal('modal-proprietario');" class="space-y-4 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Finalidade</label>
+            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+              <option>Venda</option>
+              <option>Locação</option>
+              <option>Venda e Locação</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tipo de Imóvel</label>
+            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+              <option>Apartamento</option>
+              <option>Casa em Condomínio</option>
+              <option>Casa Padrão</option>
+              <option>Mansão / Alto Padrão</option>
+              <option>Terreno / Lote</option>
+              <option>Comercial</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Bairro / Condomínio e Cidade</label>
+          <input type="text" required placeholder="Ex: Condomínio Portal do Paraíso, Jundiaí" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Seu Nome</label>
+            <input type="text" required placeholder="Nome completo" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">WhatsApp</label>
+            <input type="tel" required placeholder="(11) 99999-9999" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Valor Estimado Pretendido (Opcional)</label>
+          <input type="text" placeholder="R$ 0,00" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:outline-none">
+        </div>
+
+        <!-- Opção Especial: Divisão Premium -->
+        <div class="p-3 bg-slate-900 text-white rounded-xl border border-gold-500/40 flex items-start gap-2.5">
+          <input type="checkbox" id="check-premium-seller" class="mt-0.5 rounded text-gold-500 focus:ring-gold-500 cursor-pointer">
+          <label for="check-premium-seller" class="cursor-pointer text-[11px] text-slate-200">
+            <strong class="text-gold-400 block font-bold mb-0.5">Cadastrar na divisão Mediterrâneo Premium</strong>
+            Para propriedades de alto padrão com assessoria private, fotos de estúdio e vídeo de drone 4K.
+          </label>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-brand-900 hover:bg-brand-800 text-white font-bold rounded-xl text-sm transition shadow-lg mt-2 flex items-center justify-center gap-2">
+          Solicitar Avaliação e Anúncio
+          <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 3: CONSULTOR PRIVATE VIP (PREMIUM)   -->
+  <!-- ========================================== -->
+  <div id="modal-premium" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-gradient-to-br from-slate-950 via-[#0a1220] to-slate-950 text-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-gold-500/40">
+      <button onclick="closeModal('modal-premium')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-3">
+        <img src="LOGO_MEDI_PREMIUM_branco.png" alt="Mediterrâneo Premium" class="h-8 w-auto object-contain">
+        <span class="text-gold-400 font-bold text-xs uppercase tracking-widest border-l border-slate-700 pl-3">Corretor Especialista</span>
+      </div>
+      <h3 class="text-xl sm:text-2xl font-serif font-bold text-white">Falar com Corretor Especialista</h3>
+      <p class="text-slate-400 text-xs mt-1 mb-5">Atendimento personalizado com especialista em imóveis de alto padrão e condomínios fechados.</p>
+
+      <form onsubmit="enviarModalPremium(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Nome Completo</label>
+          <input type="text" id="modal-prem-nome" required placeholder="Seu nome completo" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-gold-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">WhatsApp para Contato</label>
+            <input type="tel" id="modal-prem-tel" required placeholder="(11) 99999-9999" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-gold-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">E-mail</label>
+            <input type="email" id="modal-prem-email" required placeholder="seuemail@exemplo.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-gold-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Interesse Principal</label>
+            <select id="modal-prem-interesse" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-gold-500 focus:outline-none">
+              <option>Comprar Casa em Condomínio</option>
+              <option>Comprar Cobertura / Apartamento</option>
+              <option>Vender Imóvel de Alto Padrão</option>
+              <option>Investimento Imobiliário</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Faixa de Valor Pretendida</label>
+            <select id="modal-prem-faixa" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-gold-500 focus:outline-none">
+              <option>A partir de R$ 2.000.000</option>
+              <option>R$ 2.000.000 a R$ 4.000.000</option>
+              <option>R$ 4.000.000 a R$ 8.000.000</option>
+              <option>Acima de R$ 8.000.000</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Condomínios ou Características Desejadas</label>
+          <textarea id="modal-prem-obs" rows="2" placeholder="Ex: Reserva da Serra, Malota, mínimo 3 suítes, piscina..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-gold-500 focus:outline-none"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:opacity-90 text-brand-950 font-bold rounded-xl text-sm transition shadow-lg mt-2 flex items-center justify-center gap-2">
+          Falar no WhatsApp (11) 99023-7149
+          <i data-lucide="arrow-right" class="w-4 h-4 text-brand-950"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lucide Script init & Modal Logic -->
+  <script>
+    lucide.createIcons();
+
+    let currentSearchTab = 'comprar';
+
+    function executarBuscaHero() {
+      if (currentSearchTab === 'premium') {
+        window.location.href = 'colecao-premium.html';
+        return;
+      }
+      if (currentSearchTab === 'lancamentos') {
+        const lancEl = document.getElementById('lancamentos');
+        if (lancEl) lancEl.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      const finalidade = currentSearchTab === 'alugar' ? 'ALUGUEL' : 'VENDA';
+      const termo = document.getElementById('search-location') ? document.getElementById('search-location').value.trim() : '';
+      const params = new URLSearchParams();
+      params.set('finalidade', finalidade);
+      if (termo) params.set('busca', termo);
+      window.location.href = `portfolio.html?${params.toString()}`;
+    }
+
+    function setSearchTab(tab) {
+      currentSearchTab = tab;
+      const tabs = ['comprar', 'alugar', 'lancamentos', 'premium'];
+      const searchBox = document.getElementById('buscador');
+      const banner = document.getElementById('search-premium-banner');
+      const typeSelect = document.getElementById('search-type');
+      const locationInput = document.getElementById('search-location');
+      const bedroomsSelect = document.getElementById('search-bedrooms');
+      const submitBtn = document.getElementById('search-submit');
+
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if (!el) return;
+        if (t === tab) {
+          if (t === 'premium') {
+            el.className = "ml-auto px-4 py-2 rounded-xl font-bold text-xs bg-slate-900 text-gold-400 ring-2 ring-gold-500 transition flex items-center gap-2 shadow-sm";
+          } else {
+            el.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-brand-900 text-white transition flex items-center gap-2 shadow-sm";
+          }
+        } else {
+          if (t === 'premium') {
+            el.className = "ml-auto px-4 py-2 rounded-xl font-bold text-xs bg-slate-900 text-gold-400 hover:bg-black transition flex items-center gap-2 border border-gold-500/40";
+          } else {
+            el.className = "px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-100 transition flex items-center gap-2";
+          }
+        }
+      });
+
+      if (tab === 'premium') {
+        if (banner) banner.classList.remove('hidden');
+        if (typeSelect) {
+          typeSelect.innerHTML = `
+            <option value="">Todas as Propriedades Premium</option>
+            <option value="mansao">Mansão em Condomínio Fechado</option>
+            <option value="cobertura">Cobertura de Luxo / Duplex</option>
+            <option value="casa-terrea-luxo">Casa Térrea Alto Padrão</option>
+            <option value="terreno-nobre">Terreno Nobre (> 700m²)</option>
+            <option value="fazenda-haras">Fazenda / Haras Nobre</option>
+          `;
+        }
+        if (locationInput) {
+          locationInput.placeholder = "Ex: Terras de São Carlos, Portal do Paraíso, Baroneza...";
+        }
+        if (bedroomsSelect) {
+          bedroomsSelect.innerHTML = `
+            <option value="">Qualquer quantidade de suítes</option>
+            <option value="3">3+ suítes</option>
+            <option value="4" selected>4+ suítes master</option>
+            <option value="5">5+ suítes</option>
+          `;
+        }
+        if (submitBtn) {
+          submitBtn.className = "w-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:opacity-90 text-brand-950 font-black py-2.5 px-5 rounded-lg text-sm flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20 transition";
+          submitBtn.innerHTML = `<i data-lucide="crown" class="w-4 h-4 text-brand-950"></i> Buscar Acervo Premium`;
+        }
+      } else {
+        if (banner) banner.classList.add('hidden');
+        if (typeSelect) {
+          typeSelect.innerHTML = `
+            <option value="">Todos os Tipos</option>
+            <option value="casa">Casa Residencial</option>
+            <option value="condominio">Casa em Condomínio</option>
+            <option value="apartamento">Apartamento</option>
+            <option value="terreno">Terreno / Lote</option>
+            <option value="comercial">Comercial / Sala</option>
+          `;
+        }
+        if (locationInput) {
+          locationInput.placeholder = "Ex: Medeiros, Eloy Chaves, Anhangabaú";
+        }
+        if (bedroomsSelect) {
+          bedroomsSelect.innerHTML = `
+            <option value="">Qualquer quantidade</option>
+            <option value="1">1+ quartos</option>
+            <option value="2">2+ quartos</option>
+            <option value="3">3+ quartos</option>
+            <option value="4">4+ quartos / suítes</option>
+          `;
+        }
+        if (submitBtn) {
+          submitBtn.className = "w-full bg-brand-900 hover:bg-brand-800 text-white font-bold py-2.5 px-5 rounded-lg text-sm flex items-center justify-center gap-2 shadow-lg shadow-brand-950/20 transition";
+          submitBtn.innerHTML = `<i data-lucide="search" class="w-4 h-4 text-gold-400"></i> Buscar Imóveis`;
+        }
+      }
+
+      lucide.createIcons();
+    }
+
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Close modal on click outside
+    window.onclick = function(event) {
+      if (event.target.id === 'modal-corretor') closeModal('modal-corretor');
+      if (event.target.id === 'modal-proprietario') closeModal('modal-proprietario');
+      if (event.target.id === 'modal-premium') closeModal('modal-premium');
+    }
+
+    function enviarModalPremium(e) {
+      e.preventDefault();
+      const nome = document.getElementById('modal-prem-nome').value;
+      const tel = document.getElementById('modal-prem-tel').value;
+      const interesse = document.getElementById('modal-prem-interesse').value;
+      const faixa = document.getElementById('modal-prem-faixa').value;
+      const obs = document.getElementById('modal-prem-obs').value;
+      const msg = encodeURIComponent(`Olá! Gostaria de atendimento com corretor especialista da divisão Mediterrâneo Premium.\n\nNome: ${nome}\nWhatsApp: ${tel}\nInteresse: ${interesse}\nFaixa: ${faixa}${obs ? '\nObs: ' + obs : ''}`);
+      window.open(`https://wa.me/5511990237149?text=${msg}`, '_blank');
+      closeModal('modal-premium');
+    }
+
+    // ==========================================
+    // RENDERIZADOR DINÂMICO DE IMÓVEIS (KUROLE/KSI)
+    // ==========================================
+    function renderVitrine(imoveis) {
+      const container = document.getElementById('vitrine-imoveis-grid');
+      if (!container) return;
+
+      if (!imoveis || imoveis.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200">
+            <i data-lucide="info" class="w-8 h-8 mx-auto mb-2 text-slate-400"></i>
+            <p class="font-bold">Nenhum imóvel encontrado nesta categoria.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = imoveis.map(imovel => {
+        const isAluguel = imovel.finalidade === 'ALUGUEL';
+        const tagBg = isAluguel ? 'bg-emerald-700' : 'bg-brand-900';
+        const tagText = isAluguel ? 'ALUGUEL' : 'VENDA';
+        const labelPreco = isAluguel ? 'Locação / mês' : 'Venda';
+
+        const valorNum = getPrecoNumerico(imovel.preco);
+        const isEligiblePremium = imovel.isPremium && (imovel.finalidade || '').toUpperCase() === 'VENDA' && valorNum >= 2000000;
+
+        const premiumBadge = isEligiblePremium ? `
+          <span class="absolute top-2.5 left-20 bg-slate-950/90 border border-gold-500/60 text-gold-400 text-[10px] font-extrabold px-2 py-0.5 rounded shadow-sm flex items-center gap-1 backdrop-blur-sm">
+            <i data-lucide="crown" class="w-3 h-3 text-gold-400"></i>
+            PREMIUM
+          </span>
+        ` : '';
+
+        const zapNumero = isEligiblePremium ? '5511990237149' : '5511989615940';
+        const zapMsg = encodeURIComponent(isEligiblePremium
+          ? `Olá! Tenho interesse no imóvel Mediterrâneo Premium cód. ${imovel.codigo} (${imovel.tipoFormatado} em ${imovel.bairro} - ${imovel.preco}).`
+          : `Olá! Vi o imóvel cód. ${imovel.codigo} (${imovel.tipoFormatado} em ${imovel.bairro} - ${imovel.preco}) no site e gostaria de mais informações.`
+        );
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-md transition group flex flex-col justify-between">
+            <div>
+              <div class="relative h-48 overflow-hidden bg-slate-100">
+                <a href="imovel.html?cod=${imovel.codigo}" class="block w-full h-full cursor-pointer">
+                  <img src="${imovel.foto}" alt="${imovel.titulo}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop'">
+                </a>
+                <span class="absolute top-2.5 left-2.5 ${tagBg} text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow-sm">${tagText}</span>
+                ${premiumBadge}
+                
+                <!-- Botão Telefone / WhatsApp Flutuante na foto -->
+                <a href="https://wa.me/${zapNumero}?text=${zapMsg}" target="_blank" title="Falar no WhatsApp" class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-lg hover:scale-110 transition z-10">
+                  <i data-lucide="phone" class="w-4 h-4"></i>
+                </a>
+
+                <span class="absolute bottom-2.5 left-2.5 bg-black/60 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded">Cód: ${imovel.codigo}</span>
+              </div>
+              <div class="p-4">
+                <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+                  <span class="${isEligiblePremium ? 'text-gold-600 font-semibold flex items-center gap-1' : ''}">${isEligiblePremium ? '<i data-lucide="crown" class="w-3 h-3"></i> ' : ''}${imovel.tipoFormatado}</span>
+                  <span class="font-bold text-slate-700">${imovel.bairro}</span>
+                </div>
+                <a href="imovel.html?cod=${imovel.codigo}" class="block">
+                  <h4 class="font-bold text-slate-900 text-sm line-clamp-2 leading-snug group-hover:text-brand-600 transition" title="${imovel.titulo}">
+                    ${imovel.titulo}
+                  </h4>
+                </a>
+                <div class="flex items-center gap-3 my-3 text-xs text-slate-600 font-medium">
+                  <span class="flex items-center gap-1"><i data-lucide="maximize" class="w-3.5 h-3.5 text-slate-400"></i> ${imovel.area}</span>
+                  <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5 text-slate-400"></i> ${imovel.dormitorios} ${imovel.dormitorios === '1' ? 'dorm' : 'dorms'}</span>
+                  <span class="flex items-center gap-1"><i data-lucide="car" class="w-3.5 h-3.5 text-slate-400"></i> ${imovel.vagas} ${imovel.vagas === '1' ? 'vaga' : 'vagas'}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 pt-0">
+              <div class="pt-3 border-t border-slate-100">
+                <div class="mb-3">
+                  <span class="text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">${labelPreco}</span>
+                  <span class="text-xl font-extrabold text-brand-900 block mt-0.5 whitespace-nowrap">${imovel.preco}</span>
+                </div>
+                <a href="imovel.html?cod=${imovel.codigo}" class="w-full py-2.5 px-3 rounded-xl bg-brand-50 hover:bg-brand-900 text-brand-900 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm group-hover:bg-brand-900 group-hover:text-white">
+                  Ver Imóvel
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // ==========================================
+    // UTILITÁRIO: EXTRAIR PREÇO NUMÉRICO
+    // ==========================================
+    function getPrecoNumerico(precoStr) {
+      if (!precoStr) return 0;
+      const semCentavos = precoStr.split(',')[0];
+      const numeros = semCentavos.replace(/[^\d]/g, '');
+      return parseInt(numeros, 10) || 0;
+    }
+
+    let currentFilter = 'todos';
+
+    function filtrarVitrine(filtro) {
+      currentFilter = filtro;
+      const lista = window.IMOVEIS_MEDITERRANEO || [];
+      
+      const botoes = {
+        'todos': document.getElementById('btn-filtro-todos'),
+        'venda': document.getElementById('btn-filtro-venda'),
+        'aluguel': document.getElementById('btn-filtro-aluguel'),
+        'premium': document.getElementById('btn-filtro-premium')
+      };
+
+      Object.entries(botoes).forEach(([chave, btn]) => {
+        if (!btn) return;
+        if (chave === filtro) {
+          if (chave === 'premium') {
+            btn.className = "px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-900 text-gold-400 ring-2 ring-gold-500 shadow-sm transition flex items-center gap-1.5";
+          } else {
+            btn.className = "px-4 py-2 rounded-lg text-xs font-bold bg-brand-900 text-white shadow-sm transition";
+          }
+        } else {
+          if (chave === 'premium') {
+            btn.className = "px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-900 text-gold-400 hover:bg-black transition flex items-center gap-1.5 border border-gold-500/40";
+          } else {
+            btn.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-brand-900 transition";
+          }
+        }
+      });
+
+      let filtrados = lista;
+      if (filtro === 'venda') filtrados = lista.filter(i => (i.finalidade || '').toUpperCase() === 'VENDA');
+      if (filtro === 'aluguel') filtrados = lista.filter(i => (i.finalidade || '').toUpperCase() === 'ALUGUEL');
+      // Regra Premium: apenas Venda e valor a partir de R$ 2.000.000 (exclui locação e valores abaixo de 2M)
+      if (filtro === 'premium') {
+        filtrados = lista.filter(i => {
+          const isVenda = (i.finalidade || '').toUpperCase() === 'VENDA';
+          const valor = getPrecoNumerico(i.preco);
+          return isVenda && valor >= 2000000;
+        });
+      }
+
+      renderVitrine(filtrados);
+    }
+
+    // ==========================================
+    // RENDERIZADOR EXCLUSIVO: MEDITERRÂNEO PREMIUM
+    // ==========================================
+    let currentPremiumCondo = 'todos';
+
+    function renderPremiumVitrine(condoFiltro = 'todos') {
+      currentPremiumCondo = condoFiltro;
+      const container = document.getElementById('vitrine-premium-grid');
+      if (!container) return;
+
+      const lista = window.IMOVEIS_MEDITERRANEO || [];
+
+      // Filtro rigoroso: Apenas VENDA e valor >= R$ 2.000.000 (exclui abaixo de 2M)
+      let premiumImoveis = lista.filter(item => {
+        const isVenda = (item.finalidade || '').toUpperCase() === 'VENDA';
+        const valor = getPrecoNumerico(item.preco);
+        return isVenda && valor >= 2000000;
+      });
+
+      // Filtro opcional por condomínio / localidade
+      if (condoFiltro && condoFiltro !== 'todos') {
+        const termo = condoFiltro.toLowerCase();
+        premiumImoveis = premiumImoveis.filter(item => {
+          const matchTitulo = (item.titulo || '').toLowerCase().includes(termo);
+          const matchBairro = (item.bairro || '').toLowerCase().includes(termo);
+          const matchCidade = (item.cidade || '').toLowerCase().includes(termo);
+          const matchDesc = (item.descricao || '').toLowerCase().includes(termo);
+          return matchTitulo || matchBairro || matchCidade || matchDesc;
+        });
+      }
+
+      // Atualizar estilo visual dos botões de filtro de condomínio
+      document.querySelectorAll('.btn-condo-filter').forEach(btn => {
+        const filterVal = btn.getAttribute('data-condo');
+        if (filterVal === condoFiltro) {
+          btn.className = "btn-condo-filter px-4 py-2 rounded-full text-xs font-bold bg-gold-500 text-brand-950 shadow-md shadow-gold-500/20 transition cursor-pointer";
+        } else {
+          btn.className = "btn-condo-filter px-4 py-2 rounded-full text-xs font-medium bg-slate-900/80 border border-gold-500/30 text-slate-300 hover:text-gold-400 hover:border-gold-500/60 transition cursor-pointer";
+        }
+      });
+
+      if (premiumImoveis.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 px-6 text-center text-slate-400 bg-slate-900/80 rounded-3xl border border-gold-500/30">
+            <div class="w-12 h-12 rounded-2xl bg-gold-500/10 border border-gold-500/30 text-gold-400 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="info" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-serif font-bold text-white text-lg">Nenhum imóvel listado para este condomínio no momento</h4>
+            <p class="text-xs text-slate-400 mt-2 max-w-md mx-auto">
+              Consulte nossos corretores especialistas para conhecer novas opções disponíveis neste condomínio ou região.
+            </p>
+            <button onclick="openModal('modal-premium')" class="mt-5 px-6 py-2.5 rounded-xl bg-gold-500 text-brand-950 font-extrabold text-xs uppercase tracking-wider hover:bg-gold-400 transition shadow-lg shadow-gold-500/20">
+              Falar com Corretor Especialista
+            </button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = premiumImoveis.map(imovel => {
+        const zapMsg = encodeURIComponent(`Olá! Tenho interesse no imóvel de alto padrão Mediterrâneo Premium cód. ${imovel.codigo} (${imovel.titulo} - ${imovel.preco}). Gostaria de atendimento com um corretor especialista.`);
+
+        // Identificar nome do condomínio se disponível
+        let localBadge = `${imovel.bairro} • ${imovel.cidade}/SP`;
+        const matchCondo = (imovel.titulo || '').match(/condom[ií]nio\s+([^,-]+)/i);
+        if (matchCondo && matchCondo[1]) {
+          localBadge = `Cond. ${matchCondo[1].trim()} • ${imovel.cidade}/SP`;
+        }
+
+        return `
+          <div class="bg-gradient-to-b from-slate-900 via-[#0d1627] to-slate-950 rounded-3xl overflow-hidden border border-gold-500/30 hover:border-gold-500/70 transition duration-300 group shadow-2xl flex flex-col justify-between">
+            <div>
+              <!-- Foto com overlay cinematográfico -->
+              <div class="relative h-64 overflow-hidden bg-slate-900">
+                <a href="imovel.html?cod=${imovel.codigo}" class="block w-full h-full">
+                  <img src="${imovel.foto}" alt="${imovel.titulo}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop'">
+                </a>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent pointer-events-none"></div>
+                
+                <div class="absolute top-3.5 left-3.5 bg-slate-950/90 border border-gold-500/60 text-gold-400 text-[10px] font-black uppercase px-3 py-1 rounded-full flex items-center gap-1.5 shadow-lg backdrop-blur-sm">
+                  <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i>
+                  MEDITERRÂNEO PREMIUM
+                </div>
+
+                <!-- Botão Telefone / WhatsApp Flutuante na foto -->
+                <a href="https://wa.me/5511990237149?text=${zapMsg}" target="_blank" title="Falar com Corretor via WhatsApp (11) 99023-7149" class="absolute top-3.5 right-3.5 w-9 h-9 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-lg hover:scale-110 transition z-10">
+                  <i data-lucide="phone" class="w-4 h-4"></i>
+                </a>
+                
+                <span class="absolute bottom-3.5 right-3.5 bg-black/80 backdrop-blur-md text-gold-300 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-gold-500/40">
+                  Cód: ${imovel.codigo}
+                </span>
+              </div>
+
+              <!-- Informações do Imóvel -->
+              <div class="p-6">
+                <span class="text-xs text-gold-400 font-bold tracking-wider uppercase block mb-1">
+                  ${localBadge}
+                </span>
+                <a href="imovel.html?cod=${imovel.codigo}" class="block group/link">
+                  <h3 class="text-lg font-serif font-bold text-white line-clamp-2 leading-snug group-hover/link:text-gold-300 transition" title="${imovel.titulo}">
+                    ${imovel.titulo}
+                  </h3>
+                </a>
+
+                <!-- Diferenciais Físicos -->
+                <div class="grid grid-cols-3 gap-2 my-5 py-3 border-y border-gold-500/20 text-center text-xs text-slate-300">
+                  <div>
+                    <span class="block font-bold text-white text-sm">${imovel.area}</span>
+                    <span class="text-[11px] text-slate-400">Área</span>
+                  </div>
+                  <div>
+                    <span class="block font-bold text-white text-sm">${imovel.suites || imovel.dormitorios} Suítes</span>
+                    <span class="text-[11px] text-slate-400">Master</span>
+                  </div>
+                  <div>
+                    <span class="block font-bold text-white text-sm">${imovel.vagas} Vagas</span>
+                    <span class="text-[11px] text-slate-400">Privativas</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Preço & Call-to-Actions -->
+            <div class="p-6 pt-0">
+              <div class="pt-4 border-t border-slate-800/80">
+                <div class="mb-4">
+                  <span class="text-[11px] uppercase font-bold tracking-wider text-slate-400 block mb-1">Venda Exclusiva</span>
+                  <span class="text-2xl sm:text-3xl font-serif font-bold text-gold-400 block whitespace-nowrap">${imovel.preco}</span>
+                </div>
+                <a href="imovel.html?cod=${imovel.codigo}" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:opacity-90 text-brand-950 text-xs font-black uppercase tracking-wider transition shadow-lg shadow-gold-500/20 flex items-center justify-center gap-2">
+                  Ver Imóvel Completo
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function buscarPorCodigo() {
+      const input = document.getElementById('input-codigo-busca');
+      if (!input || !input.value.trim()) return;
+      const cod = input.value.trim().replace(/[^\d]/g, '');
+      if (cod) {
+        window.location.href = `imovel.html?cod=${cod}`;
+      }
+    }
+
+    // Inicialização automática
+    window.addEventListener('load', () => {
+      filtrarVitrine('todos');
+      renderPremiumVitrine('todos');
+    });
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      filtrarVitrine('todos');
+      renderPremiumVitrine('todos');
+    }
+  </script>
+
+  <!-- ========================================== -->
+  <!-- BOTÃO FLUTUANTE DE WHATSAPP                -->
+  <!-- ========================================== -->
+  <aside aria-label="Atendimento via WhatsApp" class="fixed bottom-6 right-6 z-50 flex items-center group">
+    <!-- Balão com status online e chamada para ação -->
+    <a href="https://wa.me/5511989615940?text=Olá!%20Estou%20no%20site%20da%20Mediterrâneo%20e%20gostaria%20de%20atendimento." target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-2 mr-3 px-4 py-2.5 rounded-full bg-white text-slate-800 text-xs font-bold shadow-2xl border border-slate-200/90 hover:text-emerald-600 hover:border-emerald-300 transition-all duration-300">
+      <span class="relative flex h-2.5 w-2.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+      </span>
+      <span>Fale com um Consultor</span>
+    </a>
+    
+    <!-- Botão Redondo com Ícone Oficial do WhatsApp -->
+    <a href="https://wa.me/5511989615940?text=Olá!%20Estou%20no%20site%20da%20Mediterrâneo%20e%20gostaria%20de%20atendimento." target="_blank" rel="noopener noreferrer" class="relative w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-2xl shadow-emerald-500/40 hover:scale-110 active:scale-95 transition-all duration-300" aria-label="Fale conosco via WhatsApp">
+      <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M12.031 2C6.495 2 2 6.495 2 12.031c0 1.97.57 3.81 1.558 5.372L2.09 22.09l4.823-1.442A9.99 9.99 0 0 0 12.031 22C17.567 22 22 17.505 22 12.031 22 6.495 17.567 2 12.031 2zm5.727 14.186c-.24.673-1.393 1.288-1.925 1.373-.509.083-1.168.121-3.763-.954-2.844-1.178-4.664-4.077-4.805-4.267-.14-.19-1.149-1.53-1.149-2.918 0-1.388.728-2.072.986-2.355.258-.283.565-.353.753-.353.189 0 .377.002.542.01.174.008.408-.066.638.487.24.577.818 1.996.889 2.141.07.144.118.314.024.502-.094.188-.141.306-.282.47-.141.165-.296.368-.423.494-.141.14-.288.293-.124.575.165.282.733 1.208 1.574 1.956 1.082.962 1.993 1.26 2.276 1.401.282.141.447.118.612-.07.165-.188.706-.823.894-1.106.188-.282.376-.235.635-.141.259.094 1.647.776 1.929.917.282.141.47.212.541.33.07.117.07.682-.17 1.355z"/>
+      </svg>
+      <span class="absolute top-0 right-0 flex h-3.5 w-3.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-400 border-2 border-white"></span>
+      </span>
+    </a>
+  </aside>
+</body>
+</html>

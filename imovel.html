@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Detalhes do Imóvel | Mediterrâneo Negócios Imobiliários</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Base de Dados dos Imóveis (Kurole / KSI) -->
+  <script src="imoveis.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              600: '#0284c7',
+              800: '#075985',
+              900: '#0c2340',
+              950: '#071628',
+            },
+            gold: {
+              400: '#e5c07b',
+              500: '#d4af37',
+              600: '#b89327',
+              700: '#91711a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .thumb-active {
+      border-color: #0c2340 !important;
+      opacity: 1 !important;
+      transform: scale(1.04);
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ============================================================ */
+    /* PALETA E TEMA EXCLUSIVO MEDITERRÂNEO PREMIUM PRIVATE        */
+    /* ============================================================ */
+    body.theme-premium {
+      background-color: #050a14 !important;
+      color: #e2e8f0 !important;
+      background-image: 
+        radial-gradient(ellipse at 50% -5%, #10213d 0%, rgba(5, 10, 20, 0.98) 60%),
+        linear-gradient(180deg, #050a14 0%, #03060c 100%) !important;
+      background-attachment: fixed;
+    }
+    body.theme-premium ::selection {
+      background-color: #d4af37 !important;
+      color: #050a12 !important;
+    }
+
+    body.theme-premium .glassmorphism {
+      background: rgba(7, 13, 24, 0.94) !important;
+      border-color: rgba(212, 175, 55, 0.25) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    body.theme-premium .thumb-active {
+      border-color: #d4af37 !important;
+      transform: scale(1.06);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.45);
+    }
+
+    body.theme-premium .prem-card {
+      background: linear-gradient(180deg, #0a1322 0%, #050a12 100%) !important;
+      border-color: rgba(212, 175, 55, 0.28) !important;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    body.theme-premium .prem-card-price {
+      background: linear-gradient(180deg, #0f1c32 0%, #070e1b 100%) !important;
+      border: 1px solid rgba(212, 175, 55, 0.45) !important;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65) !important;
+      border-top: 3px solid #d4af37 !important;
+    }
+
+    body.theme-premium .prem-gold-btn {
+      background: linear-gradient(135deg, #b89327 0%, #f3cf65 50%, #b89327 100%) !important;
+      color: #060b14 !important;
+      font-weight: 900 !important;
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3) !important;
+    }
+    body.theme-premium .prem-gold-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    body.theme-premium .prem-comodidade-item {
+      background-color: rgba(6, 11, 20, 0.85) !important;
+      border-color: rgba(212, 175, 55, 0.2) !important;
+      color: #e2e8f0 !important;
+    }
+    body.theme-premium .prem-comodidade-item:hover {
+      border-color: rgba(212, 175, 55, 0.5) !important;
+      background-color: rgba(10, 18, 32, 0.95) !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-600 selection:text-white">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP BAR UTILITÁRIA                     -->
+  <!-- ========================================== -->
+  <div id="top-bar-el" class="bg-brand-950 text-slate-300 text-xs py-2 px-4 border-b border-brand-900/60 top-bar-container">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="flex items-center gap-1.5 text-gold-400 hover:text-white transition font-medium">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          Voltar para a Página Inicial
+        </a>
+        <span class="hidden md:inline-block text-slate-500">|</span>
+        <span class="hidden md:inline-block text-slate-400">CRECI 22189-J • +40 Anos de Tradição</span>
+      </div>
+
+      <div class="flex items-center gap-4 ml-auto">
+        <a id="topbar-tel-link" href="https://wa.me/5511989615940" target="_blank" class="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-medium transition">
+          <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+          <span id="topbar-tel-text">Plantão de Vendas: (11) 98961-5940</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. NAVBAR                                 -->
+  <!-- ========================================== -->
+  <header id="header-el" class="sticky top-0 z-40 glassmorphism border-b border-slate-200/80 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center gap-3">
+        <img id="header-logo" src="LOGO_MEDITERRANEO.png" alt="Mediterrâneo Negócios Imobiliários" class="h-14 sm:h-16 w-auto object-contain">
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="portfolio.html" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-brand-900 transition">
+          <i data-lucide="layout-grid" class="w-4 h-4 text-brand-600"></i>
+          Portfólio de Imóveis
+        </a>
+        <a href="colecao-premium.html" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-gold-400 text-xs font-bold border border-gold-500/40 hover:bg-black transition">
+          <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i>
+          Coleção Premium
+        </a>
+        <a id="btn-header-whatsapp" href="https://wa.me/5511989615940" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm">
+          <i data-lucide="message-square" class="w-4 h-4"></i>
+          Falar com Corretor
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 3. CONTAINER PRINCIPAL DO IMÓVEL           -->
+  <!-- ========================================== -->
+  <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Breadcrumb e Ações Rápidas -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6 text-xs text-slate-500">
+      <nav id="breadcrumb-nav" class="flex items-center gap-2">
+        <a href="index.html" class="hover:text-brand-900 transition">Início</a>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+        <span id="bc-finalidade" class="font-medium text-slate-700">Venda</span>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+        <span id="bc-cidade" class="font-medium text-slate-700">Jundiaí</span>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+        <span id="bc-bairro" class="font-medium text-slate-700">Bairro</span>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+        <span id="bc-codigo" class="font-bold text-brand-900">Cód: ...</span>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-share-zap" onclick="compartilharWhatsApp()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-emerald-600 font-bold hover:border-emerald-300 transition shadow-sm">
+          <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+          Compartilhar
+        </button>
+        <button onclick="copiarLink()" id="btn-copiar" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-brand-900 font-bold transition shadow-sm">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          Copiar Link
+        </button>
+      </div>
+    </div>
+
+    <!-- Título do Imóvel e Localização -->
+    <div class="mb-6">
+      <div class="flex flex-wrap items-center gap-2 mb-2">
+        <span id="badge-finalidade" class="px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider bg-brand-900 text-white">VENDA</span>
+        <span id="badge-premium" class="hidden px-3 py-1 rounded-md text-xs font-extrabold uppercase tracking-wider bg-slate-950 text-gold-400 border border-gold-500/50 flex items-center gap-1 shadow-sm">
+          <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i> MEDITERRÂNEO PREMIUM
+        </span>
+        <span id="badge-tipo" class="px-3 py-1 rounded-md text-xs font-bold bg-slate-200 text-slate-800">Tipo de Imóvel</span>
+        <span id="badge-codigo" class="ml-auto text-xs font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">Cód: 0000</span>
+      </div>
+      
+      <h1 id="imovel-titulo" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-950 tracking-tight leading-tight mb-2">
+        Carregando detalhes do imóvel...
+      </h1>
+
+      <p id="imovel-localizacao" class="text-slate-600 text-sm flex items-center gap-1.5 font-medium">
+        <i data-lucide="map-pin" class="w-4 h-4 text-brand-600 flex-shrink-0"></i>
+        <span>Jundiaí/SP</span>
+      </p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- GALERIA DE FOTOS INTERATIVA                -->
+    <!-- ========================================== -->
+    <div id="container-galeria" class="bg-white rounded-3xl p-3 sm:p-4 border border-slate-200/90 shadow-md mb-10">
+      
+      <!-- Foto Principal com Controles e Zoom -->
+      <div class="relative h-[340px] sm:h-[480px] lg:h-[580px] rounded-2xl overflow-hidden bg-slate-900 group cursor-pointer" onclick="abrirLightbox()">
+        <img id="foto-principal" src="" alt="Foto Principal" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+        
+        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
+          <span class="px-4 py-2 rounded-full bg-black/75 backdrop-blur-md text-white text-xs font-bold flex items-center gap-2 shadow-xl">
+            <i data-lucide="maximize-2" class="w-4 h-4"></i> Clique para ampliar
+          </span>
+        </div>
+
+        <!-- Botão Foto Anterior -->
+        <button onclick="event.stopPropagation(); mudarFoto(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/90 hover:bg-white text-brand-950 flex items-center justify-center shadow-lg transition opacity-90 group-hover:opacity-100 z-10" title="Foto Anterior">
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+
+        <!-- Botão Próxima Foto -->
+        <button onclick="event.stopPropagation(); mudarFoto(1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/90 hover:bg-white text-brand-950 flex items-center justify-center shadow-lg transition opacity-90 group-hover:opacity-100 z-10" title="Próxima Foto">
+          <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        </button>
+
+        <!-- Contador de Fotos -->
+        <div class="absolute bottom-4 right-4 bg-brand-950/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-md">
+          <i data-lucide="camera" class="w-3.5 h-3.5 text-gold-400"></i>
+          <span id="foto-contador">Foto 1 de 1</span>
+        </div>
+      </div>
+
+      <!-- Barra Horizontal de Miniaturas (Thumbnails) -->
+      <div id="galeria-thumbnails" class="flex gap-2 sm:gap-3 mt-3 overflow-x-auto pb-2 hide-scrollbar">
+        <!-- Injetado via JS -->
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BARRA RÁPIDA DE ESPECIFICAÇÕES             -->
+    <!-- ========================================== -->
+    <div id="container-specs" class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-sm grid grid-cols-2 sm:grid-cols-5 gap-4 text-center mb-10">
+      <div class="border-r border-slate-100 last:border-none p-2">
+        <div class="flex items-center justify-center gap-1 text-slate-400 mb-1">
+          <i data-lucide="maximize" class="w-4 h-4 text-brand-600"></i>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Área</span>
+        </div>
+        <span id="spec-area" class="text-base sm:text-lg font-extrabold text-slate-900">-</span>
+      </div>
+
+      <div class="border-r border-slate-100 last:border-none p-2">
+        <div class="flex items-center justify-center gap-1 text-slate-400 mb-1">
+          <i data-lucide="bed" class="w-4 h-4 text-brand-600"></i>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Quartos</span>
+        </div>
+        <span id="spec-dorms" class="text-base sm:text-lg font-extrabold text-slate-900">-</span>
+      </div>
+
+      <div class="border-r border-slate-100 last:border-none p-2">
+        <div class="flex items-center justify-center gap-1 text-slate-400 mb-1">
+          <i data-lucide="award" class="w-4 h-4 text-brand-600"></i>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Suítes</span>
+        </div>
+        <span id="spec-suites" class="text-base sm:text-lg font-extrabold text-slate-900">-</span>
+      </div>
+
+      <div class="border-r border-slate-100 last:border-none p-2">
+        <div class="flex items-center justify-center gap-1 text-slate-400 mb-1">
+          <i data-lucide="bath" class="w-4 h-4 text-brand-600"></i>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Banheiros</span>
+        </div>
+        <span id="spec-banheiros" class="text-base sm:text-lg font-extrabold text-slate-900">-</span>
+      </div>
+
+      <div class="col-span-2 sm:col-span-1 p-2">
+        <div class="flex items-center justify-center gap-1 text-slate-400 mb-1">
+          <i data-lucide="car" class="w-4 h-4 text-brand-600"></i>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Vagas</span>
+        </div>
+        <span id="spec-vagas" class="text-base sm:text-lg font-extrabold text-slate-900">-</span>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- CONTEÚDO PRINCIPAL (2 COLUNAS)            -->
+    <!-- ========================================== -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      
+      <!-- COLUNA DA ESQUERDA (DESCRIÇÃO & INFRAESTRUTURA) -->
+      <div class="lg:col-span-2 space-y-8">
+        
+        <!-- Bloco de Descrição -->
+        <div id="card-descricao" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
+          <h2 class="text-xl sm:text-2xl font-extrabold text-brand-950 tracking-tight mb-4 flex items-center gap-2">
+            <i data-lucide="file-text" class="w-5 h-5 text-brand-600"></i>
+            Sobre este Imóvel
+          </h2>
+          <div id="imovel-descricao" class="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3">
+            Carregando descrição completa...
+          </div>
+        </div>
+
+        <!-- Bloco de Comodidades e Diferenciais -->
+        <div id="card-comodidades" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
+          <h2 class="text-xl sm:text-2xl font-extrabold text-brand-950 tracking-tight mb-5 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i>
+            Comodidades & Características
+          </h2>
+          <div id="imovel-comodidades" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Injetado via JS -->
+          </div>
+        </div>
+
+        <!-- Bloco de Localização -->
+        <div id="card-localizacao" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
+          <h2 class="text-xl sm:text-2xl font-extrabold text-brand-950 tracking-tight mb-2 flex items-center gap-2">
+            <i data-lucide="map" class="w-5 h-5 text-brand-600"></i>
+            Região e Bairro
+          </h2>
+          <p id="desc-regiao" class="text-slate-600 text-sm mb-4">
+            Imóvel localizado no tradicional bairro com excelente infraestrutura, fácil acesso a comércios, escolas e às principais rodovias da região (Anhanguera e Bandeirantes).
+          </p>
+          <div id="box-rota-localizacao" class="p-4 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-brand-900 text-white flex items-center justify-center">
+                <i data-lucide="navigation" class="w-5 h-5 text-gold-400"></i>
+              </div>
+              <div>
+                <span id="text-visita-acompanhada" class="block text-xs font-bold text-brand-950">Visita Acompanhada</span>
+              </div>
+            </div>
+            <button id="btn-agendar-rota" onclick="falarWhatsApp()" class="text-xs font-bold text-brand-900 hover:text-brand-600 underline">
+              Agendar Rota →
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUNA DA DIREITA (CARD FIXO DE PREÇO & CONTATO) -->
+      <div class="lg:sticky lg:top-24 space-y-6">
+        
+        <!-- Card de Valores e Ação Principal -->
+        <div id="card-sidebar-preco" class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-xl relative overflow-hidden">
+          <div class="border-b border-slate-100 pb-5 mb-5">
+            <span id="card-label-preco" class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">Valor de Venda</span>
+            <div id="card-preco-valor" class="text-3xl font-extrabold text-brand-950">
+              R$ 0,00
+            </div>
+
+            <!-- Custos Adicionais (Condomínio / IPTU) -->
+            <div class="flex items-center gap-4 mt-3 text-xs text-slate-500 font-medium">
+              <span id="custo-condominio" class="hidden">Cond.: <strong>R$ 0</strong></span>
+              <span id="custo-iptu" class="hidden">IPTU: <strong>R$ 0</strong></span>
+            </div>
+          </div>
+
+          <!-- Botões de Ação Direta -->
+          <div class="space-y-3">
+            <button id="btn-sidebar-whatsapp" onclick="falarWhatsApp()" class="w-full py-4 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition transform active:scale-98">
+              <i data-lucide="message-square" class="w-5 h-5"></i>
+              Falar no WhatsApp Agora
+            </button>
+
+            <button id="btn-sidebar-visita" onclick="abrirModalVisita()" class="w-full py-3.5 px-5 rounded-xl bg-brand-900 hover:bg-brand-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-md">
+              <i data-lucide="calendar" class="w-4 h-4 text-gold-400"></i>
+              Agendar Visita Presencial
+            </button>
+          </div>
+
+          <!-- Selos de Confiança -->
+          <div id="sidebar-selos" class="mt-6 pt-5 border-t border-slate-100 space-y-2.5 text-xs text-slate-600 font-medium">
+            <div class="flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+              <span>Imóvel 100% verificado e documentado</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="award" class="w-4 h-4 text-gold-600"></i>
+              <span>Assessoria jurídica completa e gratuita</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-brand-600"></i>
+              <span>Atendimento em menos de 5 minutos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card de Contato Direto -->
+        <div id="card-sidebar-contato" class="bg-gradient-to-br from-brand-950 to-brand-900 text-white rounded-3xl p-6 border border-brand-800 shadow-lg">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-full bg-brand-800 border-2 border-gold-400 flex items-center justify-center font-bold text-gold-400 text-base">
+              M
+            </div>
+            <div>
+              <span id="card-contato-label" class="block text-xs font-semibold text-gold-400">Plantão Mediterrâneo</span>
+              <span id="card-contato-titulo" class="font-bold text-sm">Consultores Especialistas</span>
+            </div>
+          </div>
+          <p id="card-contato-desc" class="text-xs text-slate-300 mb-4 leading-relaxed">
+            Dúvidas sobre financiamento, permuta ou negociação? Estamos disponíveis online no WhatsApp.
+          </p>
+          <a id="card-sidebar-ligar" href="tel:11989615940" class="flex items-center justify-center gap-2 text-xs font-bold text-white bg-white/10 hover:bg-white/20 py-2.5 rounded-lg border border-white/20 transition">
+            <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+            <span id="card-sidebar-ligar-text">Ligar: (11) 98961-5940</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- IMÓVEIS RELACIONADOS / SUGERIDOS           -->
+    <!-- ========================================== -->
+    <section id="secao-relacionados" class="mt-20 pt-12 border-t border-slate-200">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 id="relacionados-titulo" class="text-xl sm:text-2xl font-extrabold text-brand-950 tracking-tight">
+            Outras Propriedades Selecionadas
+          </h2>
+          <p id="relacionados-sub" class="text-slate-500 text-xs sm:text-sm mt-0.5">Explore mais opções disponíveis no catálogo da Mediterrâneo</p>
+        </div>
+        <a id="relacionados-ver-todos" href="index.html#buscador" class="text-xs sm:text-sm font-bold text-brand-900 hover:text-brand-600 transition flex items-center gap-1">
+          Ver todas as opções
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+      <div id="imoveis-relacionados-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Injetado via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL DE AGENDAMENTO DE VISITA             -->
+  <!-- ========================================== -->
+  <div id="modal-visita" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div id="modal-visita-box" class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="fecharModalVisita()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-2.5 text-brand-900 mb-2">
+        <i data-lucide="calendar" class="w-5 h-5 text-brand-600"></i>
+        <h3 class="text-lg font-extrabold">Agendar Visita Presencial</h3>
+      </div>
+      <p id="modal-imovel-sub" class="text-xs text-slate-500 mb-5">Escolha os melhores detalhes para seu agendamento:</p>
+
+      <form onsubmit="enviarAgendamento(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Seu Nome Completo</label>
+          <input type="text" id="visita-nome" required placeholder="Ex: Roberto Silva" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp / Telefone</label>
+          <input type="tel" id="visita-tel" required placeholder="(11) 99999-9999" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Data Preferencial</label>
+            <input type="date" id="visita-data" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Período</label>
+            <select id="visita-periodo" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+              <option>Manhã (09h - 12h)</option>
+              <option>Tarde (13h - 17h)</option>
+              <option>Final de Tarde (17h - 19h)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-brand-900 hover:bg-brand-800 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-lg mt-2 flex items-center justify-center gap-2">
+          Confirmar e Abrir no WhatsApp
+          <i data-lucide="arrow-right" class="w-4 h-4 text-gold-400"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- LIGHTBOX / ZOOM DE FOTOS EM TELA CHEIA     -->
+  <!-- ========================================== -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6" onclick="fecharLightbox(event)">
+    <!-- Botão Fechar -->
+    <button onclick="fecharLightboxDirect()" class="absolute top-4 right-4 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition" title="Fechar (ESC)">
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    
+    <!-- Botão Anterior -->
+    <button onclick="mudarFotoLightbox(-1, event)" class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition" title="Foto Anterior (Seta Esquerda)">
+      <i data-lucide="chevron-left" class="w-7 h-7"></i>
+    </button>
+
+    <!-- Imagem Central -->
+    <div class="max-w-6xl max-h-[88vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+      <img id="lightbox-img" src="" alt="Imagem Ampliada" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl select-none">
+      <div class="mt-3 text-center text-xs font-medium text-slate-300 flex items-center gap-3">
+        <span id="lightbox-contador" class="bg-black/60 px-3 py-1 rounded-full border border-white/10">Foto 1 de 1</span>
+        <span>•</span>
+        <span id="lightbox-nome" class="text-white font-bold">Imóvel</span>
+      </div>
+    </div>
+
+    <!-- Botão Próximo -->
+    <button onclick="mudarFotoLightbox(1, event)" class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition" title="Próxima Foto (Seta Direita)">
+      <i data-lucide="chevron-right" class="w-7 h-7"></i>
+    </button>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- FOOTER                                     -->
+  <!-- ========================================== -->
+  <footer class="bg-brand-950 text-slate-400 text-xs py-12 border-t border-brand-900 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:flex sm:justify-between sm:items-center">
+      <div class="mb-4 sm:mb-0 text-left">
+        <span class="block text-sm font-bold text-white mb-1">Mediterrâneo Negócios Imobiliários</span>
+        <span>CRECI 22189-J • Tradição, Ética e Excelência em Jundiaí e Região</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="index.html" class="hover:text-white transition">Página Inicial</a>
+        <a href="portfolio.html" class="hover:text-white transition">Portfólio de Imóveis</a>
+        <a href="colecao-premium.html" class="hover:text-gold-400 text-gold-400 font-bold transition">Coleção Premium</a>
+        <a href="index.html#lancamentos" class="hover:text-white transition">Lançamentos</a>
+        <a href="index.html#sobre" class="hover:text-white transition">Sobre a Empresa</a>
+        <a href="index.html#corretor-parceiro" class="hover:text-white transition">Corretor Parceiro</a>
+        <a href="index.html#parceiros" class="hover:text-white transition">Nossos Parceiros</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT: LÓGICA DA TELA DO IMÓVEL       -->
+  <!-- ========================================== -->
+  <script>
+    let currentImovel = null;
+    let fotosGaleria = [];
+    let indiceFotoAtual = 0;
+
+    function getParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function initPage() {
+      const lista = window.IMOVEIS_MEDITERRANEO || [];
+      const cod = getParam('cod');
+
+      if (!lista || lista.length === 0) {
+        document.getElementById('imovel-titulo').textContent = 'Erro ao carregar base de imóveis.';
+        return;
+      }
+
+      // Procura pelo código ou pega o primeiro se nenhum foi passado
+      currentImovel = lista.find(item => item.codigo === cod) || lista[0];
+
+      if (!currentImovel) {
+        document.getElementById('imovel-titulo').textContent = 'Imóvel não encontrado.';
+        return;
+      }
+
+      // Atualiza Title da página
+      document.title = `${currentImovel.titulo} - Cód. ${currentImovel.codigo} | Mediterrâneo Imóveis`;
+
+      // Breadcrumb
+      document.getElementById('bc-finalidade').textContent = currentImovel.finalidade === 'ALUGUEL' ? 'Locação' : 'Venda';
+      document.getElementById('bc-cidade').textContent = currentImovel.cidade;
+      document.getElementById('bc-bairro').textContent = currentImovel.bairro;
+      document.getElementById('bc-codigo').textContent = `Cód: ${currentImovel.codigo}`;
+
+      // Badges
+      const isAluguel = currentImovel.finalidade === 'ALUGUEL';
+      const badgeFin = document.getElementById('badge-finalidade');
+      badgeFin.textContent = isAluguel ? 'ALUGUEL' : 'VENDA';
+      badgeFin.className = isAluguel 
+        ? 'px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider bg-emerald-700 text-white'
+        : 'px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider bg-brand-900 text-white';
+
+      if (currentImovel.isPremium) {
+        document.getElementById('badge-premium').classList.remove('hidden');
+
+        // Atualiza botão do Header para Atendimento Premium
+        const btnZap = document.getElementById('btn-header-whatsapp');
+        if (btnZap) {
+          btnZap.href = `https://wa.me/5511990237149?text=${encodeURIComponent('Olá! Tenho interesse no imóvel Mediterrâneo Premium cód. ' + currentImovel.codigo)}`;
+          btnZap.innerHTML = `<i data-lucide="crown" class="w-4 h-4 text-gold-400"></i> Atendimento Premium`;
+          btnZap.className = "inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-950 text-gold-400 border border-gold-500/50 hover:bg-slate-900 text-xs font-bold transition shadow-sm";
+        }
+
+        // Atualiza Plantão Superior e Botão de Contato Lateral
+        const topLink = document.getElementById('topbar-tel-link');
+        const topText = document.getElementById('topbar-tel-text');
+        if (topLink) topLink.href = "https://wa.me/5511990237149";
+        if (topText) topText.textContent = "Plantão Premium: (11) 99023-7149";
+
+        const sideLigar = document.getElementById('card-sidebar-ligar');
+        const sideLigarText = document.getElementById('card-sidebar-ligar-text');
+        if (sideLigar) sideLigar.href = "https://wa.me/5511990237149";
+        if (sideLigarText) sideLigarText.textContent = "WhatsApp Premium: (11) 99023-7149";
+      }
+
+      document.getElementById('badge-tipo').textContent = currentImovel.tipoFormatado;
+      document.getElementById('badge-codigo').textContent = `Cód: ${currentImovel.codigo}`;
+
+      // Título e Localização
+      document.getElementById('imovel-titulo').textContent = currentImovel.titulo;
+      document.getElementById('imovel-localizacao').innerHTML = `
+        <i data-lucide="map-pin" class="w-4 h-4 text-brand-600 flex-shrink-0"></i>
+        <span>${currentImovel.bairro}, ${currentImovel.cidade}/SP</span>
+      `;
+
+      // Especificações
+      document.getElementById('spec-area').textContent = currentImovel.area || 'Consulte';
+      document.getElementById('spec-dorms').textContent = currentImovel.dormitorios || '-';
+      document.getElementById('spec-suites').textContent = currentImovel.suites || '1';
+      document.getElementById('spec-banheiros').textContent = currentImovel.banheiros || '2';
+      document.getElementById('spec-vagas').textContent = currentImovel.vagas || '-';
+
+      // Descrição
+      document.getElementById('imovel-descricao').textContent = currentImovel.descricao;
+
+      // Comodidades
+      const comContainer = document.getElementById('imovel-comodidades');
+      const itemClass = currentImovel.isPremium
+        ? "flex items-center gap-2.5 p-3 rounded-xl prem-comodidade-item border text-xs font-bold transition"
+        : "flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs font-bold text-slate-800";
+      const iconClass = currentImovel.isPremium
+        ? "w-4 h-4 text-gold-400 flex-shrink-0"
+        : "w-4 h-4 text-emerald-600 flex-shrink-0";
+
+      comContainer.innerHTML = (currentImovel.comodidades || ['Excelente localização']).map(c => `
+        <div class="${itemClass}">
+          <i data-lucide="check" class="${iconClass}"></i>
+          <span>${c}</span>
+        </div>
+      `).join('');
+
+      // Preço e Custos
+      document.getElementById('card-label-preco').textContent = isAluguel ? 'Locação / Mês' : 'Valor de Venda';
+      document.getElementById('card-preco-valor').textContent = currentImovel.preco;
+
+      if (currentImovel.condominio) {
+        const el = document.getElementById('custo-condominio');
+        el.innerHTML = `Cond.: <strong>${currentImovel.condominio}</strong>`;
+        el.classList.remove('hidden');
+      }
+      if (currentImovel.iptu) {
+        const el = document.getElementById('custo-iptu');
+        el.innerHTML = `IPTU: <strong>${currentImovel.iptu}</strong>`;
+        el.classList.remove('hidden');
+      }
+
+      // Galeria de Fotos
+      fotosGaleria = (currentImovel.fotos && currentImovel.fotos.length > 0) 
+        ? currentImovel.fotos 
+        : [currentImovel.fotoPrincipal || currentImovel.foto];
+
+      indiceFotoAtual = 0;
+      atualizarFotoPrincipal();
+      renderThumbnails();
+
+      // Se for Imóvel Premium, ativa a paleta e tema exclusivo Private
+      if (currentImovel.isPremium) {
+        aplicarTemaPremium();
+      }
+
+      // Renderizar Imóveis Relacionados
+      renderRelacionados(lista, currentImovel.codigo);
+
+      lucide.createIcons();
+    }
+
+    function atualizarFotoPrincipal() {
+      const img = document.getElementById('foto-principal');
+      img.src = fotosGaleria[indiceFotoAtual];
+      document.getElementById('foto-contador').textContent = `Foto ${indiceFotoAtual + 1} de ${fotosGaleria.length}`;
+
+      // Atualiza classe ativa nas miniaturas
+      const thumbs = document.querySelectorAll('.thumb-item');
+      const isPrem = currentImovel && currentImovel.isPremium;
+      const borderClass = isPrem ? 'border-gold-500' : 'border-brand-900';
+
+      thumbs.forEach((th, idx) => {
+        if (idx === indiceFotoAtual) {
+          th.className = `thumb-item thumb-active h-16 sm:h-20 w-24 sm:w-28 rounded-xl overflow-hidden border-2 ${borderClass} flex-shrink-0 cursor-pointer transition`;
+        } else {
+          th.className = "thumb-item h-16 sm:h-20 w-24 sm:w-28 rounded-xl overflow-hidden border-2 border-transparent opacity-60 hover:opacity-100 flex-shrink-0 cursor-pointer transition";
+        }
+      });
+    }
+
+    function mudarFoto(direcao) {
+      indiceFotoAtual += direcao;
+      if (indiceFotoAtual < 0) indiceFotoAtual = fotosGaleria.length - 1;
+      if (indiceFotoAtual >= fotosGaleria.length) indiceFotoAtual = 0;
+      atualizarFotoPrincipal();
+    }
+
+    function selecionarFoto(index) {
+      indiceFotoAtual = index;
+      atualizarFotoPrincipal();
+    }
+
+    function renderThumbnails() {
+      const container = document.getElementById('galeria-thumbnails');
+      container.innerHTML = fotosGaleria.map((url, idx) => `
+        <div onclick="selecionarFoto(${idx})" class="thumb-item ${idx === 0 ? 'thumb-active' : ''} h-16 sm:h-20 w-24 sm:w-28 rounded-xl overflow-hidden border-2 border-transparent opacity-60 hover:opacity-100 flex-shrink-0 cursor-pointer transition">
+          <img src="${url}" alt="Miniatura ${idx + 1}" class="w-full h-full object-cover">
+        </div>
+      `).join('');
+    }
+
+    function renderRelacionados(lista, currentCod) {
+      const container = document.getElementById('imoveis-relacionados-grid');
+      if (!container) return;
+
+      const isPremiumPage = currentImovel && currentImovel.isPremium;
+      let outros = [];
+
+      if (isPremiumPage) {
+        // Para imóveis premium, sugerir prioritariamente outros imóveis premium
+        outros = lista.filter(i => i.codigo !== currentCod && i.isPremium).slice(0, 3);
+        if (outros.length < 3) {
+          const complementos = lista.filter(i => i.codigo !== currentCod && !outros.some(o => o.codigo === i.codigo)).slice(0, 3 - outros.length);
+          outros = outros.concat(complementos);
+        }
+      } else {
+        outros = lista.filter(i => i.codigo !== currentCod).slice(0, 3);
+      }
+
+      container.innerHTML = outros.map(item => {
+        if (isPremiumPage) {
+          return `
+            <a href="imovel.html?cod=${item.codigo}" class="bg-gradient-to-b from-slate-900 via-[#0a1220] to-slate-950 rounded-2xl border border-gold-500/30 hover:border-gold-500/70 overflow-hidden shadow-xl transition duration-300 group flex flex-col justify-between">
+              <div>
+                <div class="relative h-48 overflow-hidden bg-slate-900">
+                  <img src="${item.foto}" alt="${item.titulo}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                  <span class="absolute top-2.5 left-2.5 bg-slate-950/90 border border-gold-500/60 text-gold-400 text-[10px] font-black uppercase px-2 py-0.5 rounded shadow-sm flex items-center gap-1 backdrop-blur-sm">
+                    <i data-lucide="crown" class="w-3 h-3 text-gold-400"></i> PREMIUM
+                  </span>
+                  <span class="absolute bottom-2.5 right-2.5 bg-black/80 backdrop-blur-sm text-gold-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-gold-500/30">Cód: ${item.codigo}</span>
+                </div>
+                <div class="p-5">
+                  <div class="flex items-center justify-between text-xs text-gold-400/90 mb-1">
+                    <span class="font-bold uppercase tracking-wider text-[11px]">${item.tipoFormatado}</span>
+                    <span class="font-semibold text-slate-300">${item.bairro}</span>
+                  </div>
+                  <h4 class="font-serif font-bold text-white text-sm line-clamp-2 leading-snug group-hover:text-gold-300 transition">
+                    ${item.titulo}
+                  </h4>
+                  <div class="flex items-center gap-3 my-3 text-xs text-slate-400 font-medium">
+                    <span class="flex items-center gap-1"><i data-lucide="maximize" class="w-3.5 h-3.5 text-gold-500/80"></i> ${item.area}</span>
+                    <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5 text-gold-500/80"></i> ${item.dormitorios} dorms</span>
+                  </div>
+                </div>
+              </div>
+              <div class="p-5 pt-0">
+                <div class="pt-3 border-t border-gold-500/20 flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] text-gold-400/70 uppercase font-semibold block">Valor de Venda</span>
+                    <span class="text-base font-serif font-bold text-gold-400">${item.preco}</span>
+                  </div>
+                  <span class="py-2 px-3 rounded-lg bg-gold-500/15 border border-gold-500/30 text-gold-300 group-hover:bg-gold-500 group-hover:text-brand-950 text-xs font-bold transition flex items-center gap-1">
+                    Ver Imóvel <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </span>
+                </div>
+              </div>
+            </a>
+          `;
+        } else {
+          return `
+            <a href="imovel.html?cod=${item.codigo}" class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-lg transition group flex flex-col justify-between">
+              <div>
+                <div class="relative h-48 overflow-hidden bg-slate-100">
+                  <img src="${item.foto}" alt="${item.titulo}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                  <span class="absolute top-2.5 left-2.5 ${item.finalidade === 'ALUGUEL' ? 'bg-emerald-700' : 'bg-brand-900'} text-white text-[10px] font-extrabold px-2 py-0.5 rounded">${item.finalidade}</span>
+                  <span class="absolute bottom-2.5 left-2.5 bg-black/60 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded">Cód: ${item.codigo}</span>
+                </div>
+                <div class="p-4">
+                  <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+                    <span>${item.tipoFormatado}</span>
+                    <span class="font-bold text-slate-700">${item.bairro}</span>
+                  </div>
+                  <h4 class="font-bold text-slate-900 text-sm line-clamp-2 leading-snug group-hover:text-brand-600 transition">
+                    ${item.titulo}
+                  </h4>
+                  <div class="flex items-center gap-3 my-3 text-xs text-slate-600 font-medium">
+                    <span class="flex items-center gap-1"><i data-lucide="maximize" class="w-3.5 h-3.5 text-slate-400"></i> ${item.area}</span>
+                    <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5 text-slate-400"></i> ${item.dormitorios} dorms</span>
+                  </div>
+                </div>
+              </div>
+              <div class="p-4 pt-0">
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <div class="mb-1">
+                    <span class="text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">${item.finalidade === 'ALUGUEL' ? 'Locação' : 'Venda'}</span>
+                    <span class="text-base font-extrabold text-brand-900 block whitespace-nowrap">${item.preco}</span>
+                  </div>
+                  <span class="py-2 px-3 rounded-lg bg-brand-50 group-hover:bg-brand-900 group-hover:text-white text-brand-900 text-xs font-bold transition flex items-center gap-1">
+                    Ver Imóvel <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </span>
+                </div>
+              </div>
+            </a>
+          `;
+        }
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function aplicarTemaPremium() {
+      // 1. Classe Global no Body
+      document.body.classList.add('theme-premium');
+
+      // 2. Logo do Header
+      const headerLogo = document.getElementById('header-logo');
+      if (headerLogo) {
+        headerLogo.src = 'LOGO_MEDI_PREMIUM_branco.png';
+        headerLogo.className = 'h-11 sm:h-13 w-auto object-contain';
+      }
+
+      // 3. Link de Nova Busca
+      const navBusca = document.getElementById('nav-busca-link');
+      if (navBusca) {
+        navBusca.className = "hidden sm:inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-gold-400 hover:text-white transition";
+      }
+
+      // 4. Breadcrumb e botões
+      const breadcrumbLinks = document.querySelectorAll('#breadcrumb-nav a');
+      breadcrumbLinks.forEach(a => a.className = "text-slate-400 hover:text-gold-400 transition");
+      const bcFinalidade = document.getElementById('bc-finalidade');
+      if (bcFinalidade) bcFinalidade.className = "text-slate-300 font-medium";
+      const bcCidade = document.getElementById('bc-cidade');
+      if (bcCidade) bcCidade.className = "text-slate-300 font-medium";
+      const bcBairro = document.getElementById('bc-bairro');
+      if (bcBairro) bcBairro.className = "text-slate-300 font-medium";
+      const bcCodigo = document.getElementById('bc-codigo');
+      if (bcCodigo) bcCodigo.className = "font-bold text-gold-400";
+
+      const btnShare = document.getElementById('btn-share-zap');
+      if (btnShare) {
+        btnShare.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-gold-500/30 text-slate-200 hover:text-gold-400 hover:border-gold-500/60 font-bold transition shadow-sm";
+      }
+      const btnCopiar = document.getElementById('btn-copiar');
+      if (btnCopiar) {
+        btnCopiar.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-gold-500/30 text-slate-200 hover:text-gold-400 hover:border-gold-500/60 font-bold transition shadow-sm";
+      }
+
+      // 5. Badges
+      const badgeFin = document.getElementById('badge-finalidade');
+      if (badgeFin) {
+        badgeFin.className = "px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-brand-950 shadow-md shadow-gold-500/20";
+      }
+      const badgeTipo = document.getElementById('badge-tipo');
+      if (badgeTipo) {
+        badgeTipo.className = "px-3 py-1 rounded-md text-xs font-bold bg-slate-900 text-gold-300 border border-gold-500/30";
+      }
+      const badgeCodigo = document.getElementById('badge-codigo');
+      if (badgeCodigo) {
+        badgeCodigo.className = "ml-auto text-xs font-bold text-gold-400 bg-slate-950 border border-gold-500/40 px-2.5 py-1 rounded-md";
+      }
+
+      // 6. Título e Localização
+      const titulo = document.getElementById('imovel-titulo');
+      if (titulo) {
+        titulo.className = "text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight leading-tight mb-2 drop-shadow-md";
+      }
+      const local = document.getElementById('imovel-localizacao');
+      if (local) {
+        local.className = "text-gold-300/90 text-sm flex items-center gap-1.5 font-medium";
+        const mapPin = local.querySelector('i, svg');
+        if (mapPin) {
+          mapPin.classList.remove('text-brand-600');
+          mapPin.classList.add('text-gold-400');
+        }
+      }
+
+      // 7. Cards de Conteúdo (Galeria, Specs, Descrição, Comodidades, Região)
+      ['container-galeria', 'container-specs', 'card-descricao', 'card-comodidades', 'card-localizacao'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('prem-card');
+      });
+
+      // Specs
+      const specIcons = document.querySelectorAll('#container-specs i, #container-specs svg');
+      specIcons.forEach(i => {
+        i.classList.remove('text-brand-600');
+        i.classList.add('text-gold-400');
+      });
+      const specSpans = document.querySelectorAll('#container-specs span[id^="spec-"]');
+      specSpans.forEach(s => s.className = "text-base sm:text-lg font-serif font-bold text-white");
+      const specDividers = document.querySelectorAll('#container-specs > div');
+      specDividers.forEach(d => {
+        d.classList.remove('border-slate-100');
+        d.classList.add('border-gold-500/20');
+      });
+
+      // Títulos dos cards
+      const h2s = document.querySelectorAll('#card-descricao h2, #card-comodidades h2, #card-localizacao h2');
+      h2s.forEach(h => {
+        h.className = "text-xl sm:text-2xl font-serif font-bold text-white tracking-tight mb-4 flex items-center gap-2.5";
+      });
+      const h2Icons = document.querySelectorAll('#card-descricao h2 i, #card-comodidades h2 i, #card-localizacao h2 i');
+      h2Icons.forEach(i => {
+        i.classList.remove('text-brand-600', 'text-emerald-600');
+        i.classList.add('text-gold-400');
+      });
+
+      // Texto de descrição
+      const descEl = document.getElementById('imovel-descricao');
+      if (descEl) descEl.className = "text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3 font-light";
+
+      // Bloco de rota
+      const rotaBox = document.getElementById('box-rota-localizacao');
+      if (rotaBox) {
+        rotaBox.className = "p-4 rounded-2xl bg-slate-950/80 border border-gold-500/30 flex items-center justify-between";
+        const rotaBtn = document.getElementById('btn-agendar-rota');
+        if (rotaBtn) rotaBtn.className = "text-xs font-bold text-gold-400 hover:text-gold-300 transition";
+        const rotaSpan = document.getElementById('text-visita-acompanhada');
+        if (rotaSpan) rotaSpan.className = "block text-xs font-bold text-white";
+      }
+
+      // 8. Sidebar Preço
+      const cardSidebarPreco = document.getElementById('card-sidebar-preco');
+      if (cardSidebarPreco) cardSidebarPreco.classList.add('prem-card-price');
+
+      const labelPreco = document.getElementById('card-label-preco');
+      if (labelPreco) labelPreco.className = "text-xs font-bold uppercase tracking-widest text-gold-400 block mb-1";
+
+      const valPreco = document.getElementById('card-preco-valor');
+      if (valPreco) valPreco.className = "text-3xl sm:text-4xl font-serif font-extrabold text-gold-400 drop-shadow-sm";
+
+      const btnZapSidebar = document.getElementById('btn-sidebar-whatsapp');
+      if (btnZapSidebar) {
+        btnZapSidebar.className = "w-full py-4 px-5 rounded-xl prem-gold-btn text-brand-950 font-black text-sm flex items-center justify-center gap-2 transition transform active:scale-98 shadow-xl shadow-gold-500/25";
+        btnZapSidebar.innerHTML = `<i data-lucide="crown" class="w-5 h-5 text-brand-950"></i> Falar com Corretor Premium`;
+      }
+
+      const btnVisitaSidebar = document.getElementById('btn-sidebar-visita');
+      if (btnVisitaSidebar) {
+        btnVisitaSidebar.className = "w-full py-3.5 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 text-gold-400 border border-gold-500/40 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-md";
+      }
+
+      // Selos de confiança
+      const selosIcons = document.querySelectorAll('#sidebar-selos i, #sidebar-selos svg');
+      selosIcons.forEach(i => {
+        i.classList.remove('text-emerald-600', 'text-brand-600', 'text-gold-600');
+        i.classList.add('text-gold-400');
+      });
+      const selosBox = document.getElementById('sidebar-selos');
+      if (selosBox) {
+        selosBox.classList.remove('border-slate-100', 'text-slate-600');
+        selosBox.classList.add('border-gold-500/20', 'text-slate-400');
+      }
+
+      // Card de Contato Concierge
+      const cardContato = document.getElementById('card-sidebar-contato');
+      if (cardContato) {
+        cardContato.className = "bg-gradient-to-br from-slate-950 via-[#0a1220] to-slate-950 text-white rounded-3xl p-6 border border-gold-500/40 shadow-2xl";
+        document.getElementById('card-contato-label').textContent = "Divisão Private";
+        document.getElementById('card-contato-titulo').textContent = "Concierge Imobiliário";
+        document.getElementById('card-contato-desc').textContent = "Atendimento estritamente confidencial e especializado nos condomínios mais prestigiados da região.";
+        const ligarBtn = document.getElementById('card-sidebar-ligar');
+        if (ligarBtn) {
+          ligarBtn.className = "flex items-center justify-center gap-2 text-xs font-bold text-gold-300 bg-gold-500/15 hover:bg-gold-500/25 py-2.5 rounded-lg border border-gold-500/40 transition";
+        }
+      }
+
+      // 9. Seção de Relacionados
+      const secRel = document.getElementById('secao-relacionados');
+      if (secRel) {
+        secRel.classList.remove('border-slate-200');
+        secRel.classList.add('border-gold-500/20');
+      }
+      const relTitulo = document.getElementById('relacionados-titulo');
+      if (relTitulo) relTitulo.className = "text-xl sm:text-2xl font-serif font-bold text-white tracking-tight";
+      const relSub = document.getElementById('relacionados-sub');
+      if (relSub) relSub.textContent = "Outras propriedades extraordinárias da curadoria Mediterrâneo Premium";
+      const relVerTodos = document.getElementById('relacionados-ver-todos');
+      if (relVerTodos) relVerTodos.className = "text-xs sm:text-sm font-bold text-gold-400 hover:text-gold-300 transition flex items-center gap-1";
+
+      // 10. Modal de Visita em Dark Luxury
+      const modalVisitaBox = document.getElementById('modal-visita-box');
+      if (modalVisitaBox) {
+        modalVisitaBox.className = "bg-gradient-to-br from-slate-950 via-[#0b1424] to-slate-950 text-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative border border-gold-500/40";
+        const modalInputs = document.querySelectorAll('#modal-visita input, #modal-visita select');
+        modalInputs.forEach(inp => {
+          inp.className = "w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:ring-2 focus:ring-gold-500 focus:outline-none";
+        });
+        const modalLabels = document.querySelectorAll('#modal-visita label');
+        modalLabels.forEach(lbl => lbl.className = "block text-xs font-bold text-gold-300 mb-1");
+        const modalBtn = document.querySelector('#modal-visita button[type="submit"]');
+        if (modalBtn) modalBtn.className = "w-full py-3.5 prem-gold-btn text-brand-950 font-black rounded-xl text-xs sm:text-sm transition shadow-lg mt-2 flex items-center justify-center gap-2";
+      }
+
+      // 11. Footer
+      const footer = document.querySelector('footer');
+      if (footer) footer.className = "bg-[#03060c] text-slate-400 text-xs py-12 border-t border-gold-500/20 mt-20";
+    }
+
+    function falarWhatsApp() {
+      if (!currentImovel) return;
+      const numZap = currentImovel.isPremium ? '5511990237149' : '5511989615940';
+      const msg = encodeURIComponent(`Olá! Estou no site da Mediterrâneo e gostaria de informações sobre o imóvel ${currentImovel.isPremium ? 'Premium ' : ''}cód. ${currentImovel.codigo} (${currentImovel.tipoFormatado} no bairro ${currentImovel.bairro} - ${currentImovel.preco}).`);
+      window.open(`https://wa.me/${numZap}?text=${msg}`, '_blank');
+    }
+
+    function compartilharWhatsApp() {
+      if (!currentImovel) return;
+      const msg = encodeURIComponent(`Veja esse imóvel na Mediterrâneo: ${currentImovel.titulo} (Cód. ${currentImovel.codigo}) - ${window.location.href}`);
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
+    }
+
+    function copiarLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const btn = document.getElementById('btn-copiar');
+        btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i> Copiado!`;
+        lucide.createIcons();
+        setTimeout(() => {
+          btn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Link`;
+          lucide.createIcons();
+        }, 2000);
+      });
+    }
+
+    // ==========================================
+    // FUNÇÕES DO LIGHTBOX / ZOOM DE FOTOS
+    // ==========================================
+    function abrirLightbox() {
+      const modal = document.getElementById('lightbox-modal');
+      const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-contador');
+      const nome = document.getElementById('lightbox-nome');
+      
+      img.src = fotosGaleria[indiceFotoAtual];
+      counter.textContent = `Foto ${indiceFotoAtual + 1} de ${fotosGaleria.length}`;
+      if (currentImovel) nome.textContent = currentImovel.titulo;
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.classList.add('overflow-hidden');
+      lucide.createIcons();
+    }
+
+    function fecharLightbox(e) {
+      if (e.target.id === 'lightbox-modal') {
+        fecharLightboxDirect();
+      }
+    }
+
+    function fecharLightboxDirect() {
+      const modal = document.getElementById('lightbox-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function mudarFotoLightbox(dir, e) {
+      if (e) e.stopPropagation();
+      mudarFoto(dir);
+      const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-contador');
+      img.src = fotosGaleria[indiceFotoAtual];
+      counter.textContent = `Foto ${indiceFotoAtual + 1} de ${fotosGaleria.length}`;
+    }
+
+    // Controle por teclado para o Lightbox
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('lightbox-modal');
+      if (modal && !modal.classList.contains('hidden')) {
+        if (e.key === 'Escape') fecharLightboxDirect();
+        if (e.key === 'ArrowLeft') mudarFotoLightbox(-1);
+        if (e.key === 'ArrowRight') mudarFotoLightbox(1);
+      }
+    });
+
+    function abrirModalVisita() {
+      const modal = document.getElementById('modal-visita');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+      lucide.createIcons();
+    }
+
+    function fecharModalVisita() {
+      const modal = document.getElementById('modal-visita');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function enviarAgendamento(e) {
+      e.preventDefault();
+      const nome = document.getElementById('visita-nome').value;
+      const tel = document.getElementById('visita-tel').value;
+      const data = document.getElementById('visita-data').value;
+      const periodo = document.getElementById('visita-periodo').value;
+
+      const numZap = currentImovel.isPremium ? '5511990237149' : '5511989615940';
+      const msg = encodeURIComponent(`Olá! Gostaria de agendar uma visita para o imóvel ${currentImovel.isPremium ? 'Mediterrâneo Premium ' : ''}cód. ${currentImovel.codigo} (${currentImovel.titulo}).\n\nNome: ${nome}\nWhatsApp: ${tel}\nData Desejada: ${data}\nPeríodo: ${periodo}`);
+      window.open(`https://wa.me/${numZap}?text=${msg}`, '_blank');
+      fecharModalVisita();
+    }
+
+    // Inicialização da tela
+    window.addEventListener('load', initPage);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      initPage();
+    }
+  </script>
+</body>
+</html>

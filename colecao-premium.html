@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mediterrâneo Premium | Coleção Privativa de Alto Padrão</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Dados Reais dos Imóveis (Kurole KSI / Mediterrâneo) -->
+  <script src="imoveis.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+          colors: {
+            gold: {
+              300: '#f5deb3',
+              400: '#e5c07b',
+              500: '#d4af37',
+              600: '#b89327',
+              700: '#91711a',
+            },
+            prime: {
+              deep: '#040810',
+              card: '#0a1220',
+              border: 'rgba(212, 175, 55, 0.3)',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #050a12;
+      color: #e2e8f0;
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fce9b8 0%, #d4af37 50%, #b89327 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-border-glow {
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+      border-color: rgba(212, 175, 55, 0.35);
+    }
+    .glassmorphism-dark {
+      background: rgba(8, 14, 25, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-gold-500 selection:text-slate-950">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP BAR EXCLUSIVA VIP                   -->
+  <!-- ========================================== -->
+  <div class="bg-black text-gold-400 text-xs py-2 px-4 border-b border-gold-500/20">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-[11px]">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-gold-400"></i>
+          Mediterrâneo Negócios Imobiliários • Divisão Private • CRECI 22189-J
+        </span>
+      </div>
+      <div class="flex items-center gap-4 ml-auto text-xs">
+        <a href="index.html" class="text-slate-400 hover:text-white transition flex items-center gap-1">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          Voltar ao Portal Principal
+        </a>
+        <span class="text-slate-700">|</span>
+        <a href="https://wa.me/5511990237149?text=Olá!%20Gostaria%20de%20atendimento%20exclusivo%20pela%20Divisão%20Mediterrâneo%20Premium." target="_blank" class="flex items-center gap-1.5 font-bold text-gold-400 hover:text-gold-300 transition">
+          <i data-lucide="phone" class="w-3.5 h-3.5 text-gold-400"></i>
+          Concierge VIP: (11) 99023-7149
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. NAVBAR LUXURY                           -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-40 glassmorphism-dark transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-22 flex items-center justify-between gap-4">
+      
+      <!-- LOGO PREMIUM -->
+      <a href="colecao-premium.html" class="flex items-center gap-3 py-1">
+        <img src="LOGO_MEDI_PREMIUM_colorido.png" alt="Mediterrâneo Premium" class="h-10 sm:h-12 w-auto object-contain">
+      </a>
+
+      <!-- NAVEGAÇÃO INTERNA -->
+      <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-xs uppercase tracking-wider font-bold text-slate-300">
+        <a href="#acervo" class="text-gold-400 hover:text-gold-300 transition flex items-center gap-1.5">
+          <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+          Acervo Exclusivo
+        </a>
+        <a href="#diferenciais" class="hover:text-gold-400 transition">Diferenciais</a>
+        <a href="#concierge" class="hover:text-gold-400 transition">Concierge Private</a>
+        <a href="portfolio.html" class="text-slate-400 hover:text-white transition">Portfólio Geral</a>
+      </nav>
+
+      <!-- BOTÃO DIRETO CONCIERGE WHATSAPP -->
+      <div class="flex items-center gap-3">
+        <a href="https://wa.me/5511990237149?text=Olá!%20Gostaria%20de%20solicitar%20assessoria%20private%20para%20imóveis%20de%20alto%20padrão%20acima%20de%20R$%202%20Milhões." target="_blank" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-slate-950 font-black text-xs uppercase tracking-wider hover:opacity-95 transition shadow-lg shadow-gold-500/20 flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          Falar com Concierge VIP
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 3. HERO SECTION EXCLUSIVA                  -->
+  <!-- ========================================== -->
+  <section class="relative pt-16 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-gold-500/20">
+    <div class="absolute inset-0 z-0 opacity-20 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#050a12]/95 via-[#060b14]/80 to-[#050a12] z-0"></div>
+
+    <div class="relative z-10 max-w-5xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-bold uppercase tracking-wider mb-6">
+        <i data-lucide="sparkles" class="w-4 h-4 text-gold-400"></i>
+        Curadoria Reservada • Imóveis Acima de R$ 2 Milhões
+      </div>
+
+      <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
+        A Arte de Viver Bem em <span class="gold-gradient-text">Propriedades Extraordinárias</span>
+      </h1>
+
+      <p class="text-slate-300 text-sm sm:text-lg max-w-3xl mx-auto leading-relaxed mb-10 font-light">
+        A <strong>Mediterrâneo Premium</strong> representa o ápice do mercado imobiliário em Jundiaí e no interior paulista. Uma seleção criteriosa de mansões em condomínio, coberturas e terrenos exclusivos com total sigilo e assessoria jurídica integral.
+      </p>
+
+      <!-- 4 Pilares de Autoridade -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
+        <div class="p-4 rounded-2xl bg-black/40 border border-gold-500/20">
+          <i data-lucide="lock" class="w-5 h-5 text-gold-400 mb-2"></i>
+          <span class="block text-white font-bold text-sm">Sigilo Absoluto</span>
+          <span class="text-[11px] text-slate-400">Atendimento privativo sem exposição</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-black/40 border border-gold-500/20">
+          <i data-lucide="crown" class="w-5 h-5 text-gold-400 mb-2"></i>
+          <span class="block text-white font-bold text-sm">Tier R$ 2M+</span>
+          <span class="text-[11px] text-slate-400">Curadoria restrita ao alto padrão</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-black/40 border border-gold-500/20">
+          <i data-lucide="file-check" class="w-5 h-5 text-gold-400 mb-2"></i>
+          <span class="block text-white font-bold text-sm">Due Diligence VIP</span>
+          <span class="text-[11px] text-slate-400">100% segurança e rigor contratual</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-black/40 border border-gold-500/20">
+          <i data-lucide="user-check" class="w-5 h-5 text-gold-400 mb-2"></i>
+          <span class="block text-white font-bold text-sm">Concierge Dedicado</span>
+          <span class="text-[11px] text-slate-400">Visitas guiadas e personalizadas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 4. ACERVO EXCLUSIVO & FILTROS VIP          -->
+  <!-- ========================================== -->
+  <section id="acervo" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-gold-500/20">
+      <div>
+        <span class="text-gold-400 font-bold text-xs uppercase tracking-wider block mb-1">
+          Catálogo Selecionado
+        </span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">
+          Propriedades Disponíveis para Aquisição
+        </h2>
+      </div>
+
+      <!-- Filtro Rápido por Tipo -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="filtrarTipo('')" id="btn-tipo-todos" class="px-4 py-2 rounded-xl text-xs font-bold bg-gold-500 text-slate-950 transition">
+          Todos os Imóveis
+        </button>
+        <button onclick="filtrarTipo('Casa Condominio')" id="btn-tipo-casa" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-gold-400 border border-gold-500/20 transition">
+          Mansões em Condomínio
+        </button>
+        <button onclick="filtrarTipo('Terreno Condominio')" id="btn-tipo-terreno" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-gold-400 border border-gold-500/20 transition">
+          Lotes em Condomínio
+        </button>
+        <button onclick="filtrarTipo('Apartamento')" id="btn-tipo-apt" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-gold-400 border border-gold-500/20 transition">
+          Apartamentos de Luxo
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Imóveis Premium -->
+    <div id="grid-premium" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Inserido dinamicamente via JS -->
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 5. DIFERENCIAIS DA DIVISÃO PREMIUM         -->
+  <!-- ========================================== -->
+  <section id="diferenciais" class="py-16 bg-[#080e18] border-y border-gold-500/20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-gold-400 font-bold text-xs uppercase tracking-wider block mb-2">
+          Padrão de Excelência
+        </span>
+        <h2 class="font-serif text-3xl font-bold text-white">
+          Por que confiar seu patrimônio à Mediterrâneo Premium?
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-8 rounded-3xl bg-black/50 border border-gold-500/20">
+          <div class="w-12 h-12 rounded-2xl bg-gold-500/10 text-gold-400 flex items-center justify-center font-bold mb-4 border border-gold-500/30">
+            <i data-lucide="gem" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-bold text-lg text-white mb-2">Curadoria Altamente Seletiva</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Cada propriedade listada na divisão Premium passa por uma rigorosa avaliação arquitetônica, localização nobre e documentação impecável antes de ser ofertada.
+          </p>
+        </div>
+
+        <div class="p-8 rounded-3xl bg-black/50 border border-gold-500/20">
+          <div class="w-12 h-12 rounded-2xl bg-gold-500/10 text-gold-400 flex items-center justify-center font-bold mb-4 border border-gold-500/30">
+            <i data-lucide="scale" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-bold text-lg text-white mb-2">Assessoria Jurídica Private</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Corpo de advogados especialistas em direito imobiliário, garantindo segurança na análise de certidões, estruturação de propostas e contratos customizados.
+          </p>
+        </div>
+
+        <div class="p-8 rounded-3xl bg-black/50 border border-gold-500/20">
+          <div class="w-12 h-12 rounded-2xl bg-gold-500/10 text-gold-400 flex items-center justify-center font-bold mb-4 border border-gold-500/30">
+            <i data-lucide="award" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-bold text-lg text-white mb-2">Tradição de Mais de 40 Anos</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            A força da marca líder em Jundiaí e região (CRECI 22189-J), conectando as famílias mais tradicionais às oportunidades imobiliárias mais exclusivas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 6. CONTATO DIRETO CONCIERGE VIP            -->
+  <!-- ========================================== -->
+  <section id="concierge" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+    <div class="p-10 sm:p-14 rounded-3xl bg-gradient-to-br from-black via-[#0a1220] to-black border border-gold-500/30 shadow-2xl relative overflow-hidden">
+      <div class="w-16 h-16 rounded-2xl bg-gold-500/10 border border-gold-500/30 text-gold-400 flex items-center justify-center mx-auto mb-6">
+        <i data-lucide="sparkles" class="w-8 h-8"></i>
+      </div>
+      <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white mb-4">
+        Deseja um Atendimento Customizado?
+      </h2>
+      <p class="text-slate-300 text-sm max-w-xl mx-auto mb-8 leading-relaxed">
+        Seja para vender um imóvel singular com total discrição ou para encontrar a residência perfeita nos condomínios mais prestigiados da região.
+      </p>
+      
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="https://wa.me/5511990237149?text=Olá!%20Gostaria%20de%20agendar%20uma%20conversa%20com%20um%20especialista%20da%20Mediterrâneo%20Premium." target="_blank" class="px-8 py-4 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-slate-950 font-black text-sm uppercase tracking-wider hover:opacity-95 transition shadow-lg shadow-gold-500/30 flex items-center gap-2.5">
+          <i data-lucide="phone" class="w-4 h-4"></i>
+          Falar com Especialista VIP: (11) 99023-7149
+        </a>
+        <a href="portfolio.html" class="px-6 py-4 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-wider transition">
+          Ver Todo o Portfólio Geral
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 7. FOOTER LUXURY                           -->
+  <!-- ========================================== -->
+  <footer class="bg-black text-slate-500 text-xs py-12 border-t border-gold-500/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+      <div>
+        <span class="block text-sm font-bold text-gold-400 mb-1">Mediterrâneo Premium • Negócios Imobiliários</span>
+        <span class="text-slate-400">Tirreno Negócios Imobiliários Ltda. • CRECI 22189-J • Rua Culto à Ciência, 96 - Chácara Urbana, Jundiaí/SP</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-6 text-slate-400">
+        <a href="index.html" class="hover:text-gold-400 transition">Portal Principal</a>
+        <a href="portfolio.html" class="hover:text-gold-400 transition">Portfólio Completo</a>
+        <a href="index.html#lancamentos" class="hover:text-gold-400 transition">Lançamentos</a>
+        <a href="index.html#sobre" class="hover:text-gold-400 transition">Sobre a Empresa</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- SCRIPT: CARREGAMENTO DA COLEÇÃO PREMIUM    -->
+  <!-- ========================================== -->
+  <script>
+    let imoveisPremium = [];
+    let tipoAtivo = '';
+
+    function parsePrice(precoStr) {
+      if (!precoStr) return 0;
+      const num = parseInt(precoStr.replace(/[^0-9]/g, ''), 10);
+      return isNaN(num) ? 0 : num;
+    }
+
+    function initPremium() {
+      const todos = window.IMOVEIS_MEDITERRANEO || [];
+      // Filtra estritamente os imóveis a partir de R$ 2.000.000
+      imoveisPremium = todos.filter(item => parsePrice(item.preco) >= 2000000);
+      renderizarPremium();
+      lucide.createIcons();
+    }
+
+    function filtrarTipo(tipo) {
+      tipoAtivo = tipo;
+
+      // Atualiza botões
+      document.getElementById('btn-tipo-todos').className = tipo === '' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-gold-500 text-slate-950 transition' : 'px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-gold-400 border border-gold-500/20 transition';
+      document.getElementById('btn-tipo-casa').className = tipo === 'Casa Condominio' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-gold-500 text-slate-950 transition' : 'px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-gold-400 border border-gold-500/20 transition';
+      document.getElementById('btn-tipo-terreno').className = tipo === 'Terreno Condominio' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-gold-500 text-slate-950 transition' : 'px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-gold-400 border border-gold-500/20 transition';
+      document.getElementById('btn-tipo-apt').className = (tipo === 'Apartamento' || tipo === 'Apartamento Padrao' || tipo === 'Apartamento Duplex') ? 'px-4 py-2 rounded-xl text-xs font-bold bg-gold-500 text-slate-950 transition' : 'px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-gold-400 border border-gold-500/20 transition';
+
+      renderizarPremium();
+    }
+
+    function renderizarPremium() {
+      const container = document.getElementById('grid-premium');
+      
+      let filtrados = imoveisPremium;
+      if (tipoAtivo === 'Apartamento') {
+        filtrados = imoveisPremium.filter(i => (i.tipoFormatado || '').includes('Apartamento'));
+      } else if (tipoAtivo) {
+        filtrados = imoveisPremium.filter(i => i.tipoFormatado === tipoAtivo);
+      }
+
+      container.innerHTML = filtrados.map(item => {
+        const fotoUrl = item.foto || (item.fotos && item.fotos[0]) || '';
+        const msgWhats = encodeURIComponent(`Olá! Vi no acervo da Mediterrâneo Premium a propriedade cód. ${item.codigo} (${item.tipoFormatado} em ${item.bairro}) avaliada em ${item.preco} e gostaria de atendimento concierge exclusivo.`);
+
+        return `
+          <div class="bg-[#0a1220] rounded-3xl overflow-hidden border border-gold-500/30 gold-border-glow transition-all duration-300 flex flex-col group hover:-translate-y-1">
+            
+            <!-- Imagem e Badges -->
+            <div class="relative h-64 overflow-hidden bg-black">
+              <img src="${fotoUrl}" alt="${item.titulo}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+              
+              <!-- Tag VIP -->
+              <div class="absolute top-3.5 left-3.5 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-gold-500/50 text-gold-400 text-[10px] font-extrabold uppercase tracking-wider">
+                <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i>
+                Coleção Privativa VIP
+              </div>
+
+              <!-- Código -->
+              <div class="absolute top-3.5 right-3.5 z-10">
+                <span class="px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-xs text-gold-400 text-[11px] font-bold border border-gold-500/30">
+                  #${item.codigo}
+                </span>
+              </div>
+
+              <!-- Preço em Ouro -->
+              <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/60 to-transparent p-5 flex items-end justify-between">
+                <div>
+                  <span class="block text-[10px] uppercase font-bold text-gold-400 tracking-wider">Valor de Aquisição</span>
+                  <span class="text-2xl font-serif font-bold text-white">
+                    ${item.preco}
+                  </span>
+                </div>
+                <span class="text-xs text-gold-300 bg-gold-500/20 px-2.5 py-1 rounded-full border border-gold-500/40 font-semibold">
+                  ${item.tipoFormatado}
+                </span>
+              </div>
+            </div>
+
+            <!-- Detalhes do Card -->
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <div>
+                <p class="text-xs font-semibold text-gold-400 flex items-center gap-1 mb-1.5">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                  ${item.bairro ? `${item.bairro}, ` : ''}${item.cidade || 'Jundiaí'}
+                </p>
+                <h3 class="font-bold text-base text-white line-clamp-2 leading-snug group-hover:text-gold-300 transition">
+                  ${item.titulo}
+                </h3>
+              </div>
+
+              <!-- Ficha Técnica -->
+              <div class="grid grid-cols-4 gap-2 py-4 my-4 border-y border-gold-500/20 text-center text-xs">
+                <div>
+                  <span class="block font-bold text-white">${item.area || '-'}</span>
+                  <span class="text-[10px] text-slate-400">Área</span>
+                </div>
+                <div>
+                  <span class="block font-bold text-white">${item.dormitorios || '-'}</span>
+                  <span class="text-[10px] text-slate-400">Dorms</span>
+                </div>
+                <div>
+                  <span class="block font-bold text-white">${item.suites || '-'}</span>
+                  <span class="text-[10px] text-slate-400">Suítes</span>
+                </div>
+                <div>
+                  <span class="block font-bold text-white">${item.vagas || '-'}</span>
+                  <span class="text-[10px] text-slate-400">Vagas</span>
+                </div>
+              </div>
+
+              <!-- Botões de Ação -->
+              <div class="grid grid-cols-2 gap-2.5 mt-2">
+                <a href="imovel.html?id=${item.codigo}" class="py-3 px-3 rounded-xl bg-white/5 hover:bg-gold-500 hover:text-slate-950 text-gold-400 border border-gold-500/30 text-xs font-bold transition text-center flex items-center justify-center gap-1.5">
+                  Ver Detalhes
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+                <a href="https://wa.me/5511990237149?text=${msgWhats}" target="_blank" class="py-3 px-3 rounded-xl bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-slate-950 font-black text-xs uppercase tracking-wider transition text-center flex items-center justify-center gap-1.5 shadow-md shadow-gold-500/20">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  Concierge
+                </a>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    window.addEventListener('DOMContentLoaded', initPremium);
+  </script>
+</body>
+</html>

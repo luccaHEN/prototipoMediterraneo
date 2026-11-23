@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Lançamento em Destaque | Mediterrâneo Negócios Imobiliários</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Base de Dados dos Lançamentos Oficiais -->
+  <script src="lancamentos.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              600: '#0284c7',
+              800: '#075985',
+              900: '#0c2340',
+              950: '#071628',
+            },
+            gold: {
+              400: '#e5c07b',
+              500: '#d4af37',
+              600: '#b89327',
+              700: '#91711a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .thumb-active {
+      border-color: #0c2340 !important;
+      opacity: 1 !important;
+      transform: scale(1.04);
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-600 selection:text-white pb-20 sm:pb-0">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP BAR UTILITÁRIA                     -->
+  <!-- ========================================== -->
+  <div class="bg-brand-950 text-slate-300 text-xs py-2 px-4 border-b border-brand-900/60">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-4">
+        <a href="index.html#lancamentos" class="flex items-center gap-1.5 text-gold-400 hover:text-white transition font-medium">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          Voltar para Lançamentos
+        </a>
+        <span class="hidden md:inline-block text-slate-500">|</span>
+        <span class="hidden md:inline-block text-slate-400">CRECI 22189-J • Plantão Especialista em Lançamentos</span>
+      </div>
+
+      <div class="flex items-center gap-4 ml-auto">
+        <a href="https://wa.me/5511989615940" target="_blank" class="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-medium transition">
+          <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+          Plantão de Vendas: (11) 98961-5940
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. NAVBAR                                 -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-40 glassmorphism border-b border-slate-200/80 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="LOGO_MEDITERRANEO.png" alt="Mediterrâneo Negócios Imobiliários" class="h-14 sm:h-16 w-auto object-contain">
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="portfolio.html" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-brand-900 transition">
+          <i data-lucide="layout-grid" class="w-4 h-4 text-brand-600"></i>
+          Portfólio de Imóveis
+        </a>
+        <a href="colecao-premium.html" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-gold-400 text-xs font-bold border border-gold-500/40 hover:bg-black transition">
+          <i data-lucide="crown" class="w-3.5 h-3.5 text-gold-400"></i>
+          Coleção Premium
+        </a>
+        <a id="btn-header-whatsapp" href="https://wa.me/5511989615940" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm">
+          <i data-lucide="message-square" class="w-4 h-4"></i>
+          Falar com Especialista
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 3. CONTAINER PRINCIPAL DO LANÇAMENTO      -->
+  <!-- ========================================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Breadcrumb e Compartilhamento -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6 text-xs text-slate-500">
+      <nav class="flex items-center gap-2 flex-wrap">
+        <a href="index.html" class="hover:text-brand-900 transition">Início</a>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+        <a href="index.html#lancamentos" class="hover:text-brand-900 transition">Lançamentos</a>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+        <span id="bc-cidade" class="font-medium text-slate-700">Jundiaí</span>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-400"></i>
+        <span id="bc-nome" class="font-bold text-brand-900">Nome do Empreendimento</span>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button onclick="compartilharWhatsApp()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-emerald-600 font-bold hover:border-emerald-300 transition shadow-sm">
+          <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+          Compartilhar
+        </button>
+        <button onclick="copiarLink()" id="btn-copiar" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-brand-900 font-bold transition shadow-sm">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          Copiar Link
+        </button>
+      </div>
+    </div>
+
+    <!-- Título, Slogan e Badges -->
+    <div class="mb-6">
+      <div class="flex flex-wrap items-center gap-2 mb-2">
+        <span id="badge-status" class="px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider bg-brand-900 text-white">Status</span>
+        <span id="badge-construtora" class="px-3 py-1 rounded-md text-xs font-bold bg-white text-slate-800 border border-slate-300 shadow-sm flex items-center gap-1">
+          <i data-lucide="building-2" class="w-3 h-3 text-brand-600"></i>
+          Construtora Santa Angela
+        </span>
+        <span class="px-3 py-1 rounded-md text-xs font-bold bg-amber-50 border border-amber-200 text-amber-800 flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3 h-3 text-amber-600"></i>
+          Catálogo Oficial Mediterrâneo
+        </span>
+      </div>
+
+      <h1 id="lancamento-nome" class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-1">
+        Nome do Empreendimento
+      </h1>
+      <p id="lancamento-slogan" class="text-sm sm:text-base text-slate-500 font-medium mb-3">
+        Slogan do empreendimento
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-600">
+        <div id="lancamento-local" class="flex items-center gap-1.5 font-medium">
+          <i data-lucide="map-pin" class="w-4 h-4 text-brand-600 flex-shrink-0"></i>
+          <span>Localização completa</span>
+        </div>
+        <span class="text-slate-300">|</span>
+        <div id="lancamento-proximidades" class="text-slate-500">
+          Proximidades estratégicas
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- GALERIA DE FOTOS INTERATIVA               -->
+    <!-- ========================================== -->
+    <div class="mb-8">
+      <div class="relative w-full h-80 sm:h-[460px] md:h-[520px] rounded-2xl overflow-hidden bg-slate-900 shadow-md group cursor-pointer" onclick="abrirLightbox()">
+        <img id="foto-principal" src="" alt="Perspectiva Artística" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+        
+        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
+          <span class="px-4 py-2 rounded-full bg-black/75 backdrop-blur-md text-white text-xs font-bold flex items-center gap-2 shadow-xl">
+            <i data-lucide="maximize-2" class="w-4 h-4"></i> Clique para ampliar
+          </span>
+        </div>
+
+        <!-- Controles de Navegação -->
+        <button onclick="event.stopPropagation(); mudarFoto(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition backdrop-blur-sm z-10" title="Foto Anterior">
+          <i data-lucide="chevron-left" class="w-5 h-5"></i>
+        </button>
+        <button onclick="event.stopPropagation(); mudarFoto(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition backdrop-blur-sm z-10" title="Próxima Foto">
+          <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </button>
+
+        <div class="absolute bottom-3 right-3 bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-lg backdrop-blur-sm flex items-center gap-1.5" id="foto-contador">
+          <i data-lucide="camera" class="w-3.5 h-3.5 text-gold-400"></i>
+          Foto 1 de 1
+        </div>
+      </div>
+
+      <!-- Miniaturas -->
+      <div id="galeria-thumbnails" class="flex gap-3 mt-3 overflow-x-auto pb-2 hide-scrollbar">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- GRID PRINCIPAL: CONTEÚDO E SIDEBAR        -->
+    <!-- ========================================== -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- COLUNA PRINCIPAL (2/3) -->
+      <div class="lg:col-span-2 space-y-8">
+        
+        <!-- Card de Especificações Rápidas -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Visão Geral do Projeto</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <i data-lucide="maximize" class="w-5 h-5 text-brand-600 mx-auto mb-1"></i>
+              <span id="spec-area" class="block font-bold text-slate-900 text-sm sm:text-base">-- m²</span>
+              <span class="text-[11px] text-slate-500">Área Privativa</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <i data-lucide="bed" class="w-5 h-5 text-brand-600 mx-auto mb-1"></i>
+              <span id="spec-dorms" class="block font-bold text-slate-900 text-sm sm:text-base">--</span>
+              <span class="text-[11px] text-slate-500">Dormitórios / Suítes</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <i data-lucide="car" class="w-5 h-5 text-brand-600 mx-auto mb-1"></i>
+              <span id="spec-vagas" class="block font-bold text-slate-900 text-sm sm:text-base">-- vagas</span>
+              <span class="text-[11px] text-slate-500">Garagem Coberta</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <i data-lucide="building-2" class="w-5 h-5 text-brand-600 mx-auto mb-1"></i>
+              <span id="spec-construtora" class="block font-bold text-slate-900 text-sm sm:text-base">--</span>
+              <span class="text-[11px] text-slate-500">Construtora</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Descrição Completa -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-4 text-brand-900">
+            <i data-lucide="file-text" class="w-5 h-5 text-brand-600"></i>
+            <h2 class="text-lg font-bold">Sobre o Empreendimento</h2>
+          </div>
+          <div id="lancamento-descricao" class="text-sm text-slate-600 leading-relaxed space-y-4 whitespace-pre-line">
+            Descrição do empreendimento...
+          </div>
+        </div>
+
+        <!-- Diferenciais Construtivos e Exclusividades -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-4 text-brand-900">
+            <i data-lucide="award" class="w-5 h-5 text-brand-600"></i>
+            <h2 class="text-lg font-bold">Diferenciais e Tecnologia Construtiva</h2>
+          </div>
+          <div id="lancamento-diferenciais" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Renderizado dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Características e Área de Lazer Completa -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-4 text-brand-900">
+            <i data-lucide="trees" class="w-5 h-5 text-brand-600"></i>
+            <h2 class="text-lg font-bold">Lazer & Infraestrutura de Clube</h2>
+          </div>
+          <div id="lancamento-lazer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <!-- Renderizado dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Plantas Humanizadas & Tipologias -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-4 text-brand-900">
+            <i data-lucide="layout" class="w-5 h-5 text-brand-600"></i>
+            <h2 class="text-lg font-bold">Opções de Plantas e Metragens</h2>
+          </div>
+          <div id="lancamento-plantas" class="space-y-3">
+            <!-- Renderizado dinamicamente -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SIDEBAR FIXA (1/3): PREÇO E ATENDIMENTO    -->
+      <!-- ========================================== -->
+      <div class="space-y-6">
+        
+        <!-- Card de Valores e Ação -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm sticky top-28">
+          <span class="text-xs uppercase font-bold text-slate-400 block tracking-wider mb-1">Condições de Lançamento</span>
+          
+          <div class="mb-4">
+            <span class="text-xs text-slate-500 block">Unidades a partir de</span>
+            <span id="card-preco-valor" class="text-2xl sm:text-3xl font-extrabold text-brand-900 block whitespace-nowrap mt-0.5">
+              R$ 0.000.000
+            </span>
+            <p id="card-preco-condicao" class="text-xs text-slate-500 mt-1">
+              Condições especiais de pagamento direto com a construtora
+            </p>
+          </div>
+
+          <div class="space-y-3 pt-3 border-t border-slate-100">
+            <button onclick="falarWhatsApp()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-md">
+              <i data-lucide="phone" class="w-4 h-4"></i>
+              Falar no WhatsApp com Especialista
+            </button>
+
+            <button onclick="abrirModalVisita()" class="w-full py-3 bg-brand-900 hover:bg-brand-800 text-white font-bold rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+              <i data-lucide="calendar" class="w-4 h-4 text-gold-400"></i>
+              Agendar Visita ao Decorado
+            </button>
+          </div>
+
+          <!-- Formulário Rápido de Contato -->
+          <form onsubmit="enviarFormulario(event)" class="mt-6 pt-6 border-t border-slate-100 space-y-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">Gostaria de mais informações?</h3>
+            <p class="text-xs text-slate-500">Deixe seus dados para receber a apresentação completa:</p>
+            
+            <input type="text" id="lead-nome" required placeholder="Seu nome" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+            <input type="tel" id="lead-tel" required placeholder="WhatsApp / Telefone com DDD" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+            
+            <button type="submit" class="w-full py-2.5 bg-slate-900 hover:bg-black text-white font-bold rounded-xl text-xs transition">
+              Solicitar Apresentação Oficial
+            </button>
+          </form>
+
+          <!-- Card Corretor Responsável -->
+          <div class="mt-6 pt-5 border-t border-slate-100 flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-brand-900 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              MI
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900">Mediterrâneo Negócios Imobiliários</span>
+              <span class="text-[11px] text-slate-500">CRECI 22189-J • Equipe Especializada</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 4. OUTROS LANÇAMENTOS EM DESTAQUE          -->
+    <!-- ========================================== -->
+    <section class="mt-16 pt-12 border-t border-slate-200">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Catálogo Completo</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Outros Lançamentos em Jundiaí e Região</h2>
+        </div>
+        <a href="index.html#lancamentos" class="text-xs font-bold text-brand-900 hover:text-brand-600 transition flex items-center gap-1">
+          Ver todos no site
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+
+      <div id="outros-lancamentos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: AGENDAR VISITA AO DECORADO          -->
+  <!-- ========================================== -->
+  <div id="modal-visita" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      <button onclick="fecharModalVisita()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-2.5 text-brand-900 mb-2">
+        <i data-lucide="calendar" class="w-5 h-5 text-brand-600"></i>
+        <h3 class="text-lg font-extrabold">Agendar Visita ao Stand / Decorado</h3>
+      </div>
+      <p id="modal-sub" class="text-xs text-slate-500 mb-5">Escolha os melhores detalhes para seu atendimento exclusivo:</p>
+
+      <form onsubmit="enviarAgendamento(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Seu Nome Completo</label>
+          <input type="text" id="visita-nome" required placeholder="Ex: Lucas Pereira" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp / Telefone</label>
+          <input type="tel" id="visita-tel" required placeholder="(11) 98961-5940" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Data Preferencial</label>
+            <input type="date" id="visita-data" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Período</label>
+            <select id="visita-periodo" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-600 focus:outline-none">
+              <option>Manhã (09h - 12h)</option>
+              <option>Tarde (13h - 17h)</option>
+              <option>Final de Tarde (17h - 19h)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-brand-900 hover:bg-brand-800 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-lg mt-2 flex items-center justify-center gap-2">
+          Confirmar e Abrir no WhatsApp
+          <i data-lucide="arrow-right" class="w-4 h-4 text-gold-400"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- LIGHTBOX / ZOOM DE FOTOS EM TELA CHEIA     -->
+  <!-- ========================================== -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6" onclick="fecharLightbox(event)">
+    <!-- Botão Fechar -->
+    <button onclick="fecharLightboxDirect()" class="absolute top-4 right-4 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition" title="Fechar (ESC)">
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    
+    <!-- Botão Anterior -->
+    <button onclick="mudarFotoLightbox(-1, event)" class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition" title="Foto Anterior (Seta Esquerda)">
+      <i data-lucide="chevron-left" class="w-7 h-7"></i>
+    </button>
+
+    <!-- Imagem Central -->
+    <div class="max-w-6xl max-h-[88vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+      <img id="lightbox-img" src="" alt="Imagem Ampliada" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl select-none">
+      <div class="mt-3 text-center text-xs font-medium text-slate-300 flex items-center gap-3">
+        <span id="lightbox-contador" class="bg-black/60 px-3 py-1 rounded-full border border-white/10">Foto 1 de 1</span>
+        <span>•</span>
+        <span id="lightbox-nome" class="text-white font-bold">Lançamento</span>
+      </div>
+    </div>
+
+    <!-- Botão Próximo -->
+    <button onclick="mudarFotoLightbox(1, event)" class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition" title="Próxima Foto (Seta Direita)">
+      <i data-lucide="chevron-right" class="w-7 h-7"></i>
+    </button>
+  </div>
+
+  <!-- BARRA FIXA MOBILE -->
+  <div class="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 flex items-center justify-between gap-3 z-40 shadow-lg">
+    <div>
+      <span class="text-[10px] text-slate-400 block uppercase font-bold">A partir de</span>
+      <span id="mobile-preco" class="text-base font-extrabold text-brand-900 whitespace-nowrap">R$ 0.000.000</span>
+    </div>
+    <button onclick="falarWhatsApp()" class="py-2.5 px-4 bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md">
+      <i data-lucide="phone" class="w-4 h-4"></i>
+      WhatsApp
+    </button>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- FOOTER                                     -->
+  <!-- ========================================== -->
+  <footer class="bg-brand-950 text-slate-400 text-xs py-12 border-t border-brand-900 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:flex sm:justify-between sm:items-center">
+      <div class="mb-4 sm:mb-0 text-left">
+        <span class="block text-sm font-bold text-white mb-1">Mediterrâneo Negócios Imobiliários</span>
+        <span>CRECI 22189-J • Tradição, Ética e Excelência em Jundiaí e Região</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="index.html" class="hover:text-white transition">Página Inicial</a>
+        <a href="portfolio.html" class="hover:text-white transition">Portfólio de Imóveis</a>
+        <a href="colecao-premium.html" class="hover:text-gold-400 text-gold-400 font-bold transition">Coleção Premium</a>
+        <a href="index.html#lancamentos" class="hover:text-white transition">Lançamentos</a>
+        <a href="index.html#sobre" class="hover:text-white transition">Sobre a Empresa</a>
+        <a href="index.html#corretor-parceiro" class="hover:text-white transition">Corretor Parceiro</a>
+        <a href="index.html#parceiros" class="hover:text-white transition">Nossos Parceiros</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT: LÓGICA DA PÁGINA DE LANÇAMENTO -->
+  <!-- ========================================== -->
+  <script>
+    let currentLancamento = null;
+    let fotosGaleria = [];
+    let indiceFotoAtual = 0;
+
+    function getParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function initPage() {
+      const lista = window.LANCAMENTOS_MEDITERRANEO || [];
+      const id = (getParam('id') || getParam('slug') || '').toLowerCase();
+
+      // Encontra pelo ID ou pega o primeiro como padrão
+      currentLancamento = lista.find(item => item.id === id || item.slug === id) || lista[0];
+
+      if (!currentLancamento) {
+        document.getElementById('lancamento-nome').textContent = 'Lançamento não encontrado.';
+        return;
+      }
+
+      // Title da Página
+      document.title = `${currentLancamento.nome} | Lançamentos Mediterrâneo Imóveis`;
+
+      // Breadcrumb
+      document.getElementById('bc-cidade').textContent = `${currentLancamento.cidade}/${currentLancamento.estado}`;
+      document.getElementById('bc-nome').textContent = currentLancamento.nome;
+
+      // Badges
+      const badgeStatus = document.getElementById('badge-status');
+      badgeStatus.textContent = currentLancamento.statusBadge;
+      badgeStatus.className = `px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider text-white ${currentLancamento.statusCor}`;
+
+      document.getElementById('badge-construtora').innerHTML = `
+        <i data-lucide="building-2" class="w-3.5 h-3.5 text-brand-600"></i>
+        Construtora ${currentLancamento.construtora}
+      `;
+
+      // Nome e Local
+      document.getElementById('lancamento-nome').textContent = currentLancamento.nome;
+      document.getElementById('lancamento-slogan').textContent = currentLancamento.slogan;
+      document.getElementById('lancamento-local').innerHTML = `
+        <i data-lucide="map-pin" class="w-4 h-4 text-brand-600 flex-shrink-0"></i>
+        <span>${currentLancamento.localizacaoCompleta}</span>
+      `;
+      document.getElementById('lancamento-proximidades').textContent = currentLancamento.proximidades;
+
+      // Especificações
+      document.getElementById('spec-area').textContent = currentLancamento.areaTexto;
+      document.getElementById('spec-dorms').textContent = currentLancamento.dormitoriosTexto;
+      document.getElementById('spec-vagas').textContent = currentLancamento.vagasTexto;
+      document.getElementById('spec-construtora').textContent = currentLancamento.construtora;
+
+      // Descrição
+      document.getElementById('lancamento-descricao').textContent = currentLancamento.descricao;
+
+      // Diferenciais
+      const difContainer = document.getElementById('lancamento-diferenciais');
+      difContainer.innerHTML = (currentLancamento.diferenciais || []).map(d => `
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-brand-100 text-brand-900 flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">
+            <i data-lucide="check" class="w-4 h-4 text-brand-600"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xs text-slate-900">${d.titulo}</h4>
+            <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">${d.desc}</p>
+          </div>
+        </div>
+      `).join('');
+
+      // Lazer Completo
+      const lazerContainer = document.getElementById('lancamento-lazer');
+      lazerContainer.innerHTML = (currentLancamento.caracteristicasLazer || []).map(item => `
+        <div class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 font-semibold">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-gold-500 flex-shrink-0"></i>
+          <span>${item}</span>
+        </div>
+      `).join('');
+
+      // Plantas
+      const plantasContainer = document.getElementById('lancamento-plantas');
+      plantasContainer.innerHTML = (currentLancamento.plantas || []).map(p => `
+        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-brand-600/40 transition">
+          <span class="block font-bold text-xs text-brand-900">${p.tipo}</span>
+          <p class="text-xs text-slate-600 mt-1">${p.desc}</p>
+        </div>
+      `).join('');
+
+      // Sidebar Preço
+      document.getElementById('card-preco-valor').textContent = currentLancamento.precoAPartir;
+      document.getElementById('card-preco-condicao').textContent = currentLancamento.precoCondicao;
+      document.getElementById('mobile-preco').textContent = currentLancamento.precoAPartir;
+
+      // Galeria de Fotos
+      fotosGaleria = (currentLancamento.fotos && currentLancamento.fotos.length > 0)
+        ? currentLancamento.fotos
+        : [currentLancamento.fotoCapa];
+
+      indiceFotoAtual = 0;
+      atualizarFotoPrincipal();
+      renderThumbnails();
+
+      // Renderizar Outros Lançamentos
+      renderOutrosLancamentos(lista, currentLancamento.id);
+
+      lucide.createIcons();
+    }
+
+    function atualizarFotoPrincipal() {
+      const img = document.getElementById('foto-principal');
+      img.src = fotosGaleria[indiceFotoAtual];
+      document.getElementById('foto-contador').textContent = `Foto ${indiceFotoAtual + 1} de ${fotosGaleria.length}`;
+
+      const thumbs = document.querySelectorAll('.thumb-item');
+      thumbs.forEach((th, idx) => {
+        if (idx === indiceFotoAtual) {
+          th.className = "thumb-item thumb-active h-16 sm:h-20 w-24 sm:w-28 rounded-xl overflow-hidden border-2 border-brand-900 flex-shrink-0 cursor-pointer transition";
+        } else {
+          th.className = "thumb-item h-16 sm:h-20 w-24 sm:w-28 rounded-xl overflow-hidden border-2 border-transparent opacity-60 hover:opacity-100 flex-shrink-0 cursor-pointer transition";
+        }
+      });
+    }
+
+    function mudarFoto(direcao) {
+      indiceFotoAtual += direcao;
+      if (indiceFotoAtual < 0) indiceFotoAtual = fotosGaleria.length - 1;
+      if (indiceFotoAtual >= fotosGaleria.length) indiceFotoAtual = 0;
+      atualizarFotoPrincipal();
+    }
+
+    function selecionarFoto(index) {
+      indiceFotoAtual = index;
+      atualizarFotoPrincipal();
+    }
+
+    function renderThumbnails() {
+      const container = document.getElementById('galeria-thumbnails');
+      container.innerHTML = fotosGaleria.map((url, idx) => `
+        <div onclick="selecionarFoto(${idx})" class="thumb-item ${idx === 0 ? 'thumb-active' : ''} h-16 sm:h-20 w-24 sm:w-28 rounded-xl overflow-hidden border-2 border-transparent opacity-60 hover:opacity-100 flex-shrink-0 cursor-pointer transition">
+          <img src="${url}" alt="Miniatura ${idx + 1}" class="w-full h-full object-cover">
+        </div>
+      `).join('');
+    }
+
+    function renderOutrosLancamentos(lista, currentId) {
+      const outros = lista.filter(item => item.id !== currentId);
+      const container = document.getElementById('outros-lancamentos-grid');
+      if (!container) return;
+
+      container.innerHTML = outros.map(item => `
+        <a href="lancamento.html?id=${item.id}" class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition group flex flex-col justify-between">
+          <div>
+            <div class="relative h-48 overflow-hidden bg-slate-100">
+              <img src="${item.fotoCapa}" alt="${item.nome}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+              <span class="absolute top-2.5 left-2.5 ${item.statusCor} text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">${item.statusBadge}</span>
+              <span class="absolute bottom-2.5 left-2.5 bg-black/60 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded">Construtora ${item.construtora}</span>
+            </div>
+            <div class="p-5">
+              <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+                <span class="font-bold text-slate-700">${item.bairro}, ${item.cidade}/SP</span>
+                <span class="text-brand-600 font-semibold">${item.areaTexto}</span>
+              </div>
+              <h3 class="font-bold text-slate-900 text-base group-hover:text-brand-600 transition">
+                ${item.nome}
+              </h3>
+              <p class="text-xs text-slate-500 line-clamp-1 mt-1">${item.slogan}</p>
+            </div>
+          </div>
+          <div class="p-5 pt-0">
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-400 block uppercase font-bold">A partir de</span>
+                <span class="text-base font-extrabold text-brand-900">${item.precoAPartir}</span>
+              </div>
+              <span class="text-xs font-bold text-brand-600 group-hover:translate-x-1 transition flex items-center gap-1">
+                Conhecer Lançamento →
+              </span>
+            </div>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    function falarWhatsApp() {
+      if (!currentLancamento) return;
+      const msg = encodeURIComponent(`Olá! Estou no site da Mediterrâneo e gostaria de informações e apresentação do lançamento ${currentLancamento.nome} (${currentLancamento.bairro} - ${currentLancamento.precoAPartir}).`);
+      window.open(`https://wa.me/5511989615940?text=${msg}`, '_blank');
+    }
+
+    function compartilharWhatsApp() {
+      if (!currentLancamento) return;
+      const msg = encodeURIComponent(`Veja esse lançamento na Mediterrâneo Imóveis: ${currentLancamento.nome} (${currentLancamento.bairro}) - ${window.location.href}`);
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
+    }
+
+    function copiarLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const btn = document.getElementById('btn-copiar');
+        btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i> Copiado!`;
+        lucide.createIcons();
+        setTimeout(() => {
+          btn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Link`;
+          lucide.createIcons();
+        }, 2000);
+      });
+    }
+
+    // ==========================================
+    // FUNÇÕES DO LIGHTBOX / ZOOM DE FOTOS
+    // ==========================================
+    function abrirLightbox() {
+      const modal = document.getElementById('lightbox-modal');
+      const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-contador');
+      const nome = document.getElementById('lightbox-nome');
+      
+      img.src = fotosGaleria[indiceFotoAtual];
+      counter.textContent = `Foto ${indiceFotoAtual + 1} de ${fotosGaleria.length}`;
+      if (currentLancamento) nome.textContent = currentLancamento.nome;
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.classList.add('overflow-hidden');
+      lucide.createIcons();
+    }
+
+    function fecharLightbox(e) {
+      if (e.target.id === 'lightbox-modal') {
+        fecharLightboxDirect();
+      }
+    }
+
+    function fecharLightboxDirect() {
+      const modal = document.getElementById('lightbox-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function mudarFotoLightbox(dir, e) {
+      if (e) e.stopPropagation();
+      mudarFoto(dir);
+      const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-contador');
+      img.src = fotosGaleria[indiceFotoAtual];
+      counter.textContent = `Foto ${indiceFotoAtual + 1} de ${fotosGaleria.length}`;
+    }
+
+    // Controle por teclado para o Lightbox
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('lightbox-modal');
+      if (modal && !modal.classList.contains('hidden')) {
+        if (e.key === 'Escape') fecharLightboxDirect();
+        if (e.key === 'ArrowLeft') mudarFotoLightbox(-1);
+        if (e.key === 'ArrowRight') mudarFotoLightbox(1);
+      }
+    });
+
+    function abrirModalVisita() {
+      document.getElementById('modal-visita').classList.remove('hidden');
+      document.getElementById('modal-visita').classList.add('flex');
+    }
+
+    function fecharModalVisita() {
+      document.getElementById('modal-visita').classList.add('hidden');
+      document.getElementById('modal-visita').classList.remove('flex');
+    }
+
+    function enviarAgendamento(e) {
+      e.preventDefault();
+      const nome = document.getElementById('visita-nome').value;
+      const tel = document.getElementById('visita-tel').value;
+      const data = document.getElementById('visita-data').value;
+      const periodo = document.getElementById('visita-periodo').value;
+
+      const msg = encodeURIComponent(`Olá! Gostaria de agendar uma visita ao decorado do lançamento ${currentLancamento.nome}.\n\nNome: ${nome}\nTelefone: ${tel}\nData Desejada: ${data}\nPeríodo: ${periodo}`);
+      fecharModalVisita();
+      window.open(`https://wa.me/5511989615940?text=${msg}`, '_blank');
+    }
+
+    function enviarFormulario(e) {
+      e.preventDefault();
+      const nome = document.getElementById('lead-nome').value;
+      const tel = document.getElementById('lead-tel').value;
+
+      const msg = encodeURIComponent(`Olá! Gostaria de receber a apresentação oficial e tabela de valores do lançamento ${currentLancamento.nome}.\n\nNome: ${nome}\nTelefone: ${tel}`);
+      window.open(`https://wa.me/5511989615940?text=${msg}`, '_blank');
+    }
+
+    window.addEventListener('load', () => {
+      initPage();
+    });
+  </script>
+</body>
+</html>

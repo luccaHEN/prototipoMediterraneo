@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfólio de Imóveis | Mediterrâneo Negócios Imobiliários</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Dados Reais dos Imóveis (Kurole KSI / Mediterrâneo) -->
+  <script src="imoveis.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              600: '#0284c7',
+              800: '#075985',
+              900: '#0c2340',
+              950: '#071628',
+            },
+            gold: {
+              400: '#e5c07b',
+              500: '#d4af37',
+              600: '#b89327',
+              700: '#91711a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-600 selection:text-white">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP BAR UTILITÁRIA                     -->
+  <!-- ========================================== -->
+  <div class="bg-brand-950 text-slate-300 text-xs py-2 px-4 border-b border-brand-900/60">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="flex items-center gap-1.5 text-gold-400 hover:text-white transition font-medium">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          Voltar para Início
+        </a>
+        <span class="hidden sm:inline-block text-slate-500">|</span>
+        <span class="hidden sm:inline-block text-slate-400">CRECI 22189-J • +40 Anos em Jundiaí e Região</span>
+      </div>
+      <div class="flex items-center gap-4 ml-auto">
+        <a href="colecao-premium.html" class="flex items-center gap-1 text-gold-400 hover:text-gold-300 font-semibold transition">
+          <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+          Coleção Premium
+        </a>
+        <span class="text-slate-500">|</span>
+        <a href="https://wa.me/5511989615940" target="_blank" class="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-medium transition">
+          <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+          (11) 98961-5940
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. NAVBAR                                  -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-40 glassmorphism border-b border-slate-200/80 shadow-sm transition-all">
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 items-center gap-4">
+      <div class="flex items-center justify-start min-w-0">
+        <a href="index.html" class="flex items-center gap-3 group py-1">
+          <img src="LOGO_MEDITERRANEO.png" alt="Mediterrâneo Negócios Imobiliários" class="h-14 sm:h-16 w-auto object-contain transition duration-300 group-hover:scale-105">
+        </a>
+      </div>
+
+      <!-- MENU DE NAVEGAÇÃO LIMPO COM DROPDOWN DE IMÓVEIS (OPÇÃO A) -->
+      <nav class="hidden lg:flex items-center justify-center gap-6 xl:gap-8 text-sm font-semibold text-slate-700 whitespace-nowrap">
+        <!-- DROPDOWN: IMÓVEIS -->
+        <div class="relative group">
+          <button class="flex items-center gap-1.5 py-2 text-brand-600 transition font-bold text-sm">
+            <span>Imóveis</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-brand-600 group-hover:rotate-180 transition duration-200"></i>
+          </button>
+          
+          <!-- Menu Flutuante Dropdown -->
+          <div class="absolute left-0 top-full pt-2 w-64 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-50">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-2 text-xs font-medium space-y-1">
+              <a href="portfolio.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-brand-600 font-bold transition">
+                <div class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">Todos os Imóveis</span>
+                  <span class="text-[11px] text-slate-400">Ver carteira completa</span>
+                </div>
+              </a>
+              <a href="portfolio.html?finalidade=VENDA" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-800 hover:text-brand-600 transition">
+                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="key" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">Comprar Imóveis</span>
+                  <span class="text-[11px] text-slate-400">Casas, aptos e terrenos</span>
+                </div>
+              </a>
+              <a href="portfolio.html?finalidade=ALUGUEL" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-800 hover:text-brand-600 transition">
+                <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="building" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">Alugar (Locação)</span>
+                  <span class="text-[11px] text-slate-400">Aluguel descomplicado</span>
+                </div>
+              </a>
+              <div class="border-t border-slate-100 my-1"></div>
+              <a href="portfolio.html?tipo=Casa+Condominio" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-brand-600 transition">
+                <i data-lucide="home" class="w-4 h-4 text-slate-400"></i>
+                <span>Casas em Condomínio</span>
+              </a>
+              <a href="portfolio.html?tipo=Apartamento+Padrao" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-brand-600 transition">
+                <i data-lucide="layers" class="w-4 h-4 text-slate-400"></i>
+                <span>Apartamentos Padrão</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <a href="index.html#lancamentos" class="hover:text-brand-600 transition">Lançamentos</a>
+        
+        <!-- BOTÃO ESPECIAL: LINHA PREMIUM -->
+        <a href="colecao-premium.html" class="group px-3.5 py-1.5 rounded-full bg-slate-900 text-gold-400 text-xs font-bold tracking-wide uppercase flex items-center gap-2 hover:bg-black transition shadow-sm border border-gold-500/40">
+          <img src="LOGO_MEDI_PREMIUM_colorido.png" alt="Mediterrâneo Premium" class="h-4 w-auto object-contain">
+          <span>Coleção Premium</span>
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-gold-400"></i>
+        </a>
+        <a href="index.html#sobre" class="hover:text-brand-600 transition">Sobre</a>
+        <a href="index.html#parceiros" class="hover:text-brand-600 transition">Parceiros</a>
+      </nav>
+
+      <!-- COLUNA 3 (1fr): BOTÃO ANUNCIE SEU IMÓVEL ALINHADO À DIREITA -->
+      <div class="flex items-center justify-end min-w-0">
+        <a href="index.html#proprietarios" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 hover:border-brand-900 bg-white hover:bg-slate-50 text-slate-800 hover:text-brand-950 text-xs font-bold transition shadow-xs whitespace-nowrap">
+          <i data-lucide="home" class="w-4 h-4 text-brand-600"></i>
+          Anuncie seu Imóvel
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 3. HERO BANNER DO PORTFÓLIO                -->
+  <!-- ========================================== -->
+  <section class="bg-gradient-to-b from-brand-950 via-brand-900 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 border-b border-brand-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-800/80 text-gold-400 text-xs font-bold uppercase tracking-wider mb-3 border border-brand-700">
+            <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+            Carteira Oficial de Imóveis • Jundiaí & Região
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            Portfólio Geral de Imóveis
+          </h1>
+          <p class="text-slate-300 text-sm sm:text-base mt-2 max-w-2xl">
+            Encontre casas em condomínio, apartamentos e terrenos prontos para morar ou investir com assessoria documental integral.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="colecao-premium.html" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-gold-500/40 text-gold-400 text-xs font-bold hover:bg-black transition flex items-center gap-2">
+            <i data-lucide="crown" class="w-4 h-4"></i>
+            Ver Imóveis Premium (R$ 2M+)
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 4. PAINEL DE FILTROS AVANÇADOS             -->
+  <!-- ========================================== -->
+  <section class="sticky top-20 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8 shadow-xs">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <!-- Busca por Palavra-Chave / Código -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Buscar Imóvel</label>
+          <div class="relative">
+            <input type="text" id="filtro-termo" oninput="aplicarFiltros()" placeholder="Código, bairro ou título..." class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2 pl-8 pr-3 text-xs focus:ring-2 focus:ring-brand-900 focus:outline-none">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-3"></i>
+          </div>
+        </div>
+
+        <!-- Finalidade -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Finalidade</label>
+          <select id="filtro-finalidade" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2 px-3 text-xs font-medium focus:ring-2 focus:ring-brand-900 focus:outline-none">
+            <option value="">Todas (Venda & Aluguel)</option>
+            <option value="VENDA">Comprar (Venda)</option>
+            <option value="ALUGUEL">Alugar (Locação)</option>
+          </select>
+        </div>
+
+        <!-- Tipo de Imóvel -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Tipo de Imóvel</label>
+          <select id="filtro-tipo" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2 px-3 text-xs font-medium focus:ring-2 focus:ring-brand-900 focus:outline-none">
+            <option value="">Todos os Tipos</option>
+            <option value="Casa Condominio">Casa em Condomínio</option>
+            <option value="Apartamento Padrao">Apartamento Padrão</option>
+            <option value="Apartamento Duplex">Apartamento Duplex</option>
+            <option value="Terreno Condominio">Terreno em Condomínio</option>
+          </select>
+        </div>
+
+        <!-- Ordenação -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Ordenar Por</label>
+          <select id="filtro-ordem" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2 px-3 text-xs font-medium focus:ring-2 focus:ring-brand-900 focus:outline-none">
+            <option value="relevancia">Relevância / Destaque</option>
+            <option value="menor-preco">Menor Preço</option>
+            <option value="maior-preco">Maior Preço</option>
+            <option value="maior-area">Maior Área (m²)</option>
+          </select>
+        </div>
+
+        <!-- Botão Limpar -->
+        <div class="flex items-end">
+          <button onclick="limparFiltros()" class="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition flex items-center justify-center gap-1.5 border border-slate-300">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            Limpar Filtros
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Status e Contagem -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mt-3 pt-3 border-t border-slate-100 text-xs text-slate-500">
+        <div>
+          Mostrando <span id="contador-imoveis" class="font-extrabold text-brand-950">0</span> imóveis disponíveis
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Atualização em tempo real da carteira</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 5. GRID DE IMÓVEIS                         -->
+  <!-- ========================================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- BANNER VIP: IMÓVEIS PREMIUM RESERVADOS NA COLEÇÃO PRIVATIVA -->
+    <div class="mb-10 p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-slate-950 via-[#0a1220] to-slate-950 border border-gold-500/30 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-gold-500/10 border border-gold-500/40 text-gold-400 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="crown" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-gold-400 uppercase tracking-wider">Divisão Mediterrâneo Premium</span>
+            <span class="px-2 py-0.5 rounded-full bg-gold-500/20 text-gold-300 text-[10px] font-extrabold border border-gold-500/30">Acervo R$ 2M+</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1">
+            Mansões, condomínios fechados e propriedades acima de R$ 2 Milhões foram separadas exclusivamente em nossa Coleção Privativa VIP.
+          </p>
+        </div>
+      </div>
+      <a href="colecao-premium.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-slate-950 font-black text-xs uppercase tracking-wider hover:opacity-95 transition whitespace-nowrap flex items-center gap-2 flex-shrink-0 shadow-lg shadow-gold-500/20">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+        Acessar Coleção Premium
+      </a>
+    </div>
+
+    <div id="grid-portfolio" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Inserido dinamicamente via JS -->
+    </div>
+
+    <!-- Estado Vazio -->
+    <div id="empty-state" class="hidden text-center py-16 bg-white rounded-3xl border border-slate-200 max-w-lg mx-auto p-8 shadow-xs">
+      <div class="w-16 h-16 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="building" class="w-8 h-8"></i>
+      </div>
+      <h3 class="text-lg font-bold text-brand-950 mb-1">Nenhum imóvel encontrado</h3>
+      <p class="text-xs text-slate-500 mb-6">Tente ajustar os critérios de pesquisa ou remover os filtros aplicados.</p>
+      <button onclick="limparFiltros()" class="px-5 py-2.5 rounded-xl bg-brand-900 text-white font-bold text-xs hover:bg-brand-800 transition">
+        Ver Todos os Imóveis
+      </button>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 6. FOOTER COMPLETO                         -->
+  <!-- ========================================== -->
+  <footer class="bg-brand-950 text-slate-400 text-xs py-12 border-t border-brand-900 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+      <div>
+        <span class="block text-sm font-bold text-white mb-1">Mediterrâneo Negócios Imobiliários</span>
+        <span>CRECI 22189-J • Rua Culto à Ciência, 96 - Chácara Urbana, Jundiaí/SP</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="index.html" class="hover:text-white transition">Início</a>
+        <a href="portfolio.html" class="text-white font-bold transition">Todos os Imóveis</a>
+        <a href="colecao-premium.html" class="text-gold-400 hover:text-gold-300 font-bold transition">Coleção Premium</a>
+        <a href="index.html#lancamentos" class="hover:text-white transition">Lançamentos</a>
+        <a href="index.html#sobre" class="hover:text-white transition">Sobre a Empresa</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- SCRIPT: LÓGICA DO PORTFÓLIO                -->
+  <!-- ========================================== -->
+  <script>
+    let todosImoveis = [];
+
+    function parsePrice(precoStr) {
+      if (!precoStr) return 0;
+      const num = parseInt(precoStr.replace(/[^0-9]/g, ''), 10);
+      return isNaN(num) ? 0 : num;
+    }
+
+    function initPortfolio() {
+      // Exclui estritamente os imóveis Premium (>= R$ 2M) do portfólio geral, mantendo apenas na Coleção Premium
+      todosImoveis = (window.IMOVEIS_MEDITERRANEO || []).filter(item => parsePrice(item.preco) < 2000000);
+      
+      // Ler parâmetros da URL (ex: ?finalidade=ALUGUEL ou ?tipo=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      const finalidadeParam = urlParams.get('finalidade');
+      const tipoParam = urlParams.get('tipo');
+      const buscaParam = urlParams.get('busca');
+
+      if (finalidadeParam) document.getElementById('filtro-finalidade').value = finalidadeParam;
+      if (tipoParam) document.getElementById('filtro-tipo').value = tipoParam;
+      if (buscaParam) document.getElementById('filtro-termo').value = buscaParam;
+
+      aplicarFiltros();
+      lucide.createIcons();
+    }
+
+    function aplicarFiltros() {
+      const termo = document.getElementById('filtro-termo').value.toLowerCase().trim();
+      const finalidade = document.getElementById('filtro-finalidade').value;
+      const tipo = document.getElementById('filtro-tipo').value;
+      const ordem = document.getElementById('filtro-ordem').value;
+
+      let filtrados = todosImoveis.filter(item => {
+        // Filtro por termo (código, bairro, cidade, título)
+        if (termo) {
+          const matchCodigo = (item.codigo || '').toLowerCase().includes(termo);
+          const matchBairro = (item.bairro || '').toLowerCase().includes(termo);
+          const matchCidade = (item.cidade || '').toLowerCase().includes(termo);
+          const matchTitulo = (item.titulo || '').toLowerCase().includes(termo);
+          if (!matchCodigo && !matchBairro && !matchCidade && !matchTitulo) return false;
+        }
+
+        // Filtro por finalidade
+        if (finalidade && item.finalidade !== finalidade) return false;
+
+        // Filtro por tipo
+        if (tipo && item.tipoFormatado !== tipo) return false;
+
+        return true;
+      });
+
+      // Ordenação
+      if (ordem === 'menor-preco') {
+        filtrados.sort((a, b) => parsePrice(a.preco) - parsePrice(b.preco));
+      } else if (ordem === 'maior-preco') {
+        filtrados.sort((a, b) => parsePrice(b.preco) - parsePrice(a.preco));
+      } else if (ordem === 'maior-area') {
+        filtrados.sort((a, b) => parsePrice(b.area) - parsePrice(a.area));
+      }
+
+      renderizarGrid(filtrados);
+    }
+
+    function renderizarGrid(imoveis) {
+      const container = document.getElementById('grid-portfolio');
+      const contador = document.getElementById('contador-imoveis');
+      const emptyState = document.getElementById('empty-state');
+
+      contador.innerText = imoveis.length;
+
+      if (imoveis.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      
+      container.innerHTML = imoveis.map(item => {
+        const fotoUrl = item.foto || (item.fotos && item.fotos[0]) || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800';
+        const msgWhats = encodeURIComponent(`Olá! Vi o imóvel cód. ${item.codigo} (${item.tipoFormatado} em ${item.bairro}, Jundiaí) por ${item.preco} e gostaria de agendar uma visita.`);
+        const whatsappNumber = '5511989615940';
+
+        return `
+          <div class="bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+            
+            <!-- Imagem e Badges -->
+            <div class="relative h-60 overflow-hidden bg-slate-900">
+              <img src="${fotoUrl}" alt="${item.titulo}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+              
+              <!-- Badges de Status -->
+              <div class="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${item.finalidade === 'ALUGUEL' ? 'bg-emerald-600 text-white' : 'bg-brand-900 text-white'}">
+                  ${item.finalidade === 'ALUGUEL' ? 'Locação' : 'Venda'}
+                </span>
+              </div>
+
+              <!-- Código do Imóvel -->
+              <div class="absolute top-3 right-3 z-10">
+                <span class="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-xs text-white text-[11px] font-bold">
+                  #${item.codigo}
+                </span>
+              </div>
+
+              <!-- Overlay Preço -->
+              <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 flex items-end justify-between">
+                <div>
+                  <span class="block text-[10px] uppercase font-bold text-slate-300">Valor do Imóvel</span>
+                  <span class="text-xl sm:text-2xl font-extrabold text-white">
+                    ${item.preco}
+                  </span>
+                </div>
+                <span class="text-[11px] text-slate-200 bg-white/20 px-2 py-0.5 rounded backdrop-blur-xs">
+                  ${item.tipoFormatado}
+                </span>
+              </div>
+            </div>
+
+            <!-- Corpo do Card -->
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <p class="text-xs font-semibold text-brand-600 flex items-center gap-1 mb-1">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                  ${item.bairro ? `${item.bairro}, ` : ''}${item.cidade || 'Jundiaí'}
+                </p>
+                <h3 class="font-bold text-sm text-brand-950 line-clamp-2 leading-snug group-hover:text-brand-600 transition">
+                  ${item.titulo}
+                </h3>
+              </div>
+
+              <!-- Ficha Técnica Rápida -->
+              <div class="grid grid-cols-4 gap-2 py-3 my-3 border-y border-slate-100 text-center text-slate-600 text-xs">
+                <div>
+                  <span class="block font-bold text-slate-900">${item.area || '-'}</span>
+                  <span class="text-[10px] text-slate-400">Área</span>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">${item.dormitorios || '-'}</span>
+                  <span class="text-[10px] text-slate-400">Dorms</span>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">${item.suites || '-'}</span>
+                  <span class="text-[10px] text-slate-400">Suítes</span>
+                </div>
+                <div>
+                  <span class="block font-bold text-slate-900">${item.vagas || '-'}</span>
+                  <span class="text-[10px] text-slate-400">Vagas</span>
+                </div>
+              </div>
+
+              <!-- Botões de Ação -->
+              <div class="grid grid-cols-2 gap-2 mt-2">
+                <a href="imovel.html?id=${item.codigo}" class="py-2.5 px-3 rounded-xl bg-brand-50 hover:bg-brand-900 text-brand-900 hover:text-white text-xs font-bold transition text-center flex items-center justify-center gap-1.5">
+                  Ver Detalhes
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+                <a href="https://wa.me/${whatsappNumber}?text=${msgWhats}" target="_blank" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition text-center flex items-center justify-center gap-1.5 shadow-xs">
+                  <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function limparFiltros() {
+      document.getElementById('filtro-termo').value = '';
+      document.getElementById('filtro-finalidade').value = '';
+      document.getElementById('filtro-tipo').value = '';
+      document.getElementById('filtro-ordem').value = 'relevancia';
+      window.history.replaceState({}, '', window.location.pathname);
+      aplicarFiltros();
+    }
+
+    window.addEventListener('DOMContentLoaded', initPortfolio);
+  </script>
+</body>
+</html>
