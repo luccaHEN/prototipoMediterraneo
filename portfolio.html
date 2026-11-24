@@ -423,10 +423,10 @@
         const whatsappNumber = '5511989615940';
 
         return `
-          <div class="bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+          <div class="bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer" onclick="if(!event.target.closest('a')) window.location.href='imovel.html?cod=${item.codigo}'">
             
             <!-- Imagem e Badges -->
-            <div class="relative h-60 overflow-hidden bg-slate-900">
+            <a href="imovel.html?cod=${item.codigo}" class="relative h-60 overflow-hidden bg-slate-900 block group/img">
               <img src="${fotoUrl}" alt="${item.titulo}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
               
               <!-- Badges de Status -->
@@ -455,7 +455,7 @@
                   ${item.tipoFormatado}
                 </span>
               </div>
-            </div>
+            </a>
 
             <!-- Corpo do Card -->
             <div class="p-5 flex-1 flex flex-col justify-between">
@@ -464,9 +464,11 @@
                   <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
                   ${item.bairro ? `${item.bairro}, ` : ''}${item.cidade || 'Jundiaí'}
                 </p>
-                <h3 class="font-bold text-sm text-brand-950 line-clamp-2 leading-snug group-hover:text-brand-600 transition">
-                  ${item.titulo}
-                </h3>
+                <a href="imovel.html?cod=${item.codigo}" class="block">
+                  <h3 class="font-bold text-sm text-brand-950 line-clamp-2 leading-snug group-hover:text-brand-600 transition">
+                    ${item.titulo}
+                  </h3>
+                </a>
               </div>
 
               <!-- Ficha Técnica Rápida -->
@@ -491,7 +493,7 @@
 
               <!-- Botões de Ação -->
               <div class="grid grid-cols-2 gap-2 mt-2">
-                <a href="imovel.html?id=${item.codigo}" class="py-2.5 px-3 rounded-xl bg-brand-50 hover:bg-brand-900 text-brand-900 hover:text-white text-xs font-bold transition text-center flex items-center justify-center gap-1.5">
+                <a href="imovel.html?cod=${item.codigo}" class="py-2.5 px-3 rounded-xl bg-brand-50 hover:bg-brand-900 text-brand-900 hover:text-white text-xs font-bold transition text-center flex items-center justify-center gap-1.5">
                   Ver Detalhes
                   <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                 </a>

@@ -575,7 +575,7 @@
 
     function initPage() {
       const lista = window.IMOVEIS_MEDITERRANEO || [];
-      const cod = getParam('cod');
+      const cod = getParam('cod') || getParam('id');
 
       if (!lista || lista.length === 0) {
         document.getElementById('imovel-titulo').textContent = 'Erro ao carregar base de imóveis.';
@@ -583,7 +583,12 @@
       }
 
       // Procura pelo código ou pega o primeiro se nenhum foi passado
-      currentImovel = lista.find(item => item.codigo === cod) || lista[0];
+      if (cod) {
+        currentImovel = lista.find(item => String(item.codigo).trim() === String(cod).trim());
+      }
+      if (!currentImovel) {
+        currentImovel = lista[0];
+      }
 
       if (!currentImovel) {
         document.getElementById('imovel-titulo').textContent = 'Imóvel não encontrado.';
